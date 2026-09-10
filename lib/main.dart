@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// ignore: unused_import
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'theme/app_theme.dart';
 import 'providers/app_state_provider.dart';
 import 'providers/role_provider.dart';
 import 'providers/scan_flow_provider.dart';
 import 'router/app_router.dart';
 
-// Placeholder Supabase keys
-const supabaseUrl = 'PLACEHOLDER';
-const supabaseAnonKey = 'PLACEHOLDER';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize Supabase (commented out for now until real backend is connected)
-  // await Supabase.initialize(
-  //   url: supabaseUrl,
-  //   anonKey: supabaseAnonKey,
-  // );
+  await dotenv.load(fileName: ".env");
+
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    // ignore: deprecated_member_use
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
 
   runApp(
     MultiProvider(
