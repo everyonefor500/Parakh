@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // ignore: unused_import
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'theme/app_theme.dart';
+import 'providers/app_state_provider.dart';
+import 'providers/role_provider.dart';
+import 'providers/scan_flow_provider.dart';
+import 'router/app_router.dart';
 
 // Placeholder Supabase keys
 const supabaseUrl = 'PLACEHOLDER';
@@ -16,7 +21,16 @@ void main() async {
   //   anonKey: supabaseAnonKey,
   // );
 
-  runApp(const ParakhApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppStateProvider()),
+        ChangeNotifierProvider(create: (_) => RoleProvider()),
+        ChangeNotifierProvider(create: (_) => ScanFlowProvider()),
+      ],
+      child: const ParakhApp(),
+    ),
+  );
 }
 
 class ParakhApp extends StatelessWidget {
@@ -24,17 +38,10 @@ class ParakhApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Parakh',
       theme: AppTheme.darkTheme,
-      home: Scaffold(
-        body: Center(
-          child: Text(
-            'Parakh Initialization Successful',
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-        ),
-      ),
+      routerConfig: appRouter,
     );
   }
 }

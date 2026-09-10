@@ -1,30 +1,56 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:provider/provider.dart';
 import 'package:parakh/main.dart';
+import 'package:parakh/providers/app_state_provider.dart';
+import 'package:parakh/providers/role_provider.dart';
+import 'package:parakh/providers/scan_flow_provider.dart';
+import 'package:parakh/models/profile.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const ParakhApp());
+  testWidgets('App routing and shell route test', (WidgetTester tester) async {
+    final roleProvider = RoleProvider();
+    roleProvider.setRole(UserRole.officer);
+    
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AppStateProvider()),
+          ChangeNotifierProvider.value(value: roleProvider),
+          ChangeNotifierProvider(create: (_) => ScanFlowProvider()),
+        ],
+        child: const ParakhApp(),
+      ),
+    );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // We should be on Splash screen initially
+    expect(find.text('Splash Screen / Debug Menu'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Ensure debug menu is scrollable, scroll to find "Officer Home"
+    final finder = find.text('Officer Home');
+    await tester.ensureVisible(finder);
+    
+    // Tap on Officer Home in debug menu
+    await tester.tap(finder);
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Now we should be on Officer Dashboard and see the BottomNavigationBar
+    expect(find.byType(BottomNavigationBar), findsOneWidget);
+    expect(find.text('OfficerDashboardScreen'), findsWidgets);
+
+    // Tap on History tab
+    await tester.tap(find.text('History').last);
+    await tester.pumpAndSettle();
+
+    // Verify we are on History screen
+    expect(find.text('InspectionHistoryScreen'), findsWidgets);
+
+    // Tap on the FAB
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    // Verify we are on Scanner screen (no bottom nav)
+    expect(find.byType(BottomNavigationBar), findsNothing);
+    expect(find.text('ScannerScreen'), findsWidgets);
   });
 }
