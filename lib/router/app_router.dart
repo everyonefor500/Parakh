@@ -27,6 +27,9 @@ import '../screens/marketplace/bulk_scanner_screen.dart';
 import '../screens/analytics/officer_analytics_screen.dart';
 import '../screens/profile/profile_screen.dart';
 
+import '../widgets/bottom_nav_bar.dart';
+import '../widgets/floating_scan_button.dart';
+
 class AppRoutes {
   static const splash = '/splash';
   static const login = '/login';
@@ -134,21 +137,12 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state, child) {
         return Scaffold(
           body: child,
-          bottomNavigationBar: BottomNavigationBar(
-            items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.history), label: 'History'),
-              BottomNavigationBarItem(icon: Icon(Icons.description), label: 'Reports'),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-            ],
+          bottomNavigationBar: AppBottomNavBar(
             currentIndex: _calculateSelectedIndex(state.uri.path),
             onTap: (int idx) => _onItemTapped(idx, context),
-            selectedItemColor: Theme.of(context).colorScheme.primary,
-            unselectedItemColor: Colors.grey,
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: FloatingScanButton(
             onPressed: () => context.push(AppRoutes.scan),
-            child: const Icon(Icons.qr_code_scanner),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         );
