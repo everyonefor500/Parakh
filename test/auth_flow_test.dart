@@ -4,6 +4,7 @@ import 'package:parakh/main.dart';
 import 'package:parakh/providers/app_state_provider.dart';
 import 'package:parakh/providers/role_provider.dart';
 import 'package:parakh/providers/scan_flow_provider.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   testWidgets('Auth flow navigation test', (WidgetTester tester) async {
@@ -18,14 +19,12 @@ void main() {
       ),
     );
 
-    // Should be on Splash initially
-    expect(find.text('Splash Screen / Debug Menu'), findsOneWidget);
+    // Initial Splash
+    await tester.pump();
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
     
-    // Tap Login on the splash debug menu to go to real Login screen
-    final loginFinder = find.text('Login');
-    await tester.ensureVisible(loginFinder);
-    await tester.tap(loginFinder);
-    await tester.pumpAndSettle();
+    // Wait for the Future.delayed redirect to /login
+    await tester.pumpAndSettle(const Duration(seconds: 3));
     
     // Should be on Login Screen
     expect(find.text('Welcome to Parakh'), findsOneWidget);
@@ -41,7 +40,7 @@ void main() {
     await tester.tap(find.text('LMO Officer'));
     await tester.pumpAndSettle();
     
-    // Should be on Officer Home (which has OfficerDashboardScreen text)
-    expect(find.text('OfficerDashboardScreen'), findsWidgets);
+    // Should be on Officer Home (which has OfficerDashboardScreen text or 'Total Scans')
+    expect(find.text('Total Scans'), findsWidgets);
   });
 }
