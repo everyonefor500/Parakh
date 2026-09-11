@@ -1,42 +1,71 @@
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import '../theme/app_colors.dart';
 
-class FloatingScanButton extends StatelessWidget {
+/// Premium floating scan button with stronger glow and scale micro-interaction.
+class FloatingScanButton extends StatefulWidget {
   final VoidCallback onPressed;
 
   const FloatingScanButton({super.key, required this.onPressed});
 
   @override
+  State<FloatingScanButton> createState() => _FloatingScanButtonState();
+}
+
+class _FloatingScanButtonState extends State<FloatingScanButton>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scale;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+      lowerBound: 0.0,
+      upperBound: 1.0,
+    );
+    _scale = Tween<double>(begin: 1.0, end: 0.93).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.accentBlue.withValues(alpha: 0.4),
-            blurRadius: 20,
-            spreadRadius: 2,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: FloatingActionButton(
-        onPressed: onPressed,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        shape: const CircleBorder(),
+    return GestureDetector(
+      onTapDown: (_) => _controller.forward(),
+      onTapUp: (_) {
+        _controller.reverse();
+        widget.onPressed();
+      },
+      onTapCancel: () => _controller.reverse(),
+      child: AnimatedBuilder(
+        animation: _scale,
+        builder: (context, child) => Transform.scale(
+          scale: _scale.value,
+          child: child,
+        ),
         child: Container(
           width: 64,
           height: 64,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: LinearGradient(
-              colors: [AppColors.accentBlueGlow, AppColors.accentBlue],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+            gradient: AppColors.scanButtonGradient,
+            boxShadow: AppColors.floatingShadow,
           ),
-          child: const Icon(Icons.qr_code_scanner, color: AppColors.textPrimary, size: 28),
+          child: const Icon(
+            Symbols.qr_code_scanner_rounded,
+            color: Colors.white,
+            size: 28,
+            fill: 1,
+          ),
         ),
       ),
     );

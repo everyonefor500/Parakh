@@ -46,18 +46,25 @@ class Violation {
   factory Violation.fromJson(Map<String, dynamic> json) {
     return Violation(
       id: json['id'],
-      verdictId: json['verdictId'],
-      ruleId: json['ruleId'],
-      fieldName: json['fieldName'],
-      issueTitle: json['issueTitle'],
+      verdictId: json['verdictId'] ?? json['verdict_id'],
+      ruleId: json['ruleId'] ?? json['rule_id'],
+      fieldName: json['fieldName'] ?? json['field_name'],
+      issueTitle: json['issueTitle'] ?? json['issue_title'],
       description: json['description'],
-      detectedValue: json['detectedValue'],
-      requiredValue: json['requiredValue'],
-      severity: SeverityLevel.values.firstWhere((e) => e.name == json['severity']),
-      evidenceImageUrl: json['evidenceImageUrl'],
-      officerNote: json['officerNote'],
-      isIncludedInReport: json['isIncludedInReport'] ?? false,
-      createdAt: DateTime.parse(json['createdAt']),
+      detectedValue: json['detectedValue'] ?? json['detected_value'],
+      requiredValue: json['requiredValue'] ?? json['required_value'],
+      severity: SeverityLevel.values.firstWhere(
+        (e) => e.name == (json['severity'] ?? SeverityLevel.medium.name),
+        orElse: () => SeverityLevel.medium,
+      ),
+      evidenceImageUrl: json['evidenceImageUrl'] ?? json['evidence_image_url'],
+      officerNote: json['officerNote'] ?? json['officer_note'],
+      isIncludedInReport: json['isIncludedInReport'] ?? json['is_included_in_report'] ?? false,
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : (json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now()),
     );
   }
 

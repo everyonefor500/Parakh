@@ -38,6 +38,7 @@ class ParakhApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Parakh',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       routerConfig: appRouter,
     );

@@ -1,47 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/profile.dart';
 import '../models/scan.dart';
 import '../models/compliance_verdict.dart';
 import '../models/violation.dart';
-import '../data/mock_data.dart';
 
 class AppStateProvider extends ChangeNotifier {
   Profile? _currentUser;
   
-  // Expose mock data
-  List<Scan> get allScans => MockData.scans;
-  List<ComplianceVerdict> get allVerdicts => MockData.verdicts;
+  List<Scan> _scans = [];
+  List<ComplianceVerdict> _verdicts = [];
+  List<Violation> _violations = [];
+
+  List<Scan> get allScans => _scans;
+  List<ComplianceVerdict> get allVerdicts => _verdicts;
+  List<Violation> get allViolations => _violations;
 
   Profile? get currentUser => _currentUser;
 
-  void login(Profile profile) {
+  Future<void> login(Profile profile) async {
     _currentUser = profile;
     notifyListeners();
+    await fetchHistory();
   }
 
   void logout() {
     _currentUser = null;
+    _scans = [];
+    _verdicts = [];
+    _violations = [];
     notifyListeners();
   }
 
-  List<Scan> scansForCurrentUser() {
-    if (_currentUser == null) return [];
-    if (_currentUser!.role == UserRole.officer) {
-      return allScans.where((s) => s.scannedBy == _currentUser!.id).toList();
+  Future<void> fetchHistory() async {
+    if (_currentUser == null) return;
+    _scans = [];
+    _verdicts = [];
+    _violations = [];
+    notifyListeners();
+    // Intentionally left empty for the mock flow to start with 0 scans.
+  }
+
+  void addMockScan(Scan scan, ComplianceVerdict verdict, List<Violation> violations) {
+    _scans.insert(0, scan);
+    _verdicts.insert(0, verdict);
+    _violations.addAll(violations);
+    notifyListeners();
+  }
+
+  Future<void> deleteScan(String scanId) async {
+    try {
+      await Supabase.instance.client.from('scans').delete().eq('id', scanId);
+      
+      // Update local state
+      _scans.removeWhere((s) => s.id == scanId);
+      final verdict = _verdicts.where((v) => v.scanId == scanId).firstOrNull;
+      if (verdict != null) {
+        _verdicts.removeWhere((v) => v.scanId == scanId);
+        _violations.removeWhere((v) => v.verdictId == verdict.id);
+      }
+      
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error deleting scan: $e");
+      rethrow;
     }
-    // For other roles, implement specific filtering logic as needed
-    return allScans;
+  }
+
+  List<Scan> scansForCurrentUser() {
+    return _scans;
   }
 
   ComplianceVerdict? verdictForScan(String scanId) {
     try {
-      return MockData.verdicts.firstWhere((v) => v.scanId == scanId);
+      return _verdicts.firstWhere((v) => v.scanId == scanId);
     } catch (e) {
       return null;
     }
   }
 
   List<Violation> violationsForVerdict(String verdictId) {
-    return MockData.violations.where((v) => v.verdictId == verdictId).toList();
+    return _violations.where((v) => v.verdictId == verdictId).toList();
   }
 }

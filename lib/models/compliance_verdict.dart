@@ -34,13 +34,20 @@ class ComplianceVerdict {
   factory ComplianceVerdict.fromJson(Map<String, dynamic> json) {
     return ComplianceVerdict(
       id: json['id'],
-      scanId: json['scanId'],
-      status: VerdictStatus.values.firstWhere((e) => e.name == json['status']),
-      complianceScore: json['complianceScore']?.toDouble() ?? 0.0,
-      checksPassed: json['checksPassed'] ?? 0,
-      checksTotal: json['checksTotal'] ?? 0,
+      scanId: json['scanId'] ?? json['scan_id'],
+      status: VerdictStatus.values.firstWhere(
+        (e) => e.name == (json['status'] ?? VerdictStatus.review.name),
+        orElse: () => VerdictStatus.review,
+      ),
+      complianceScore: (json['complianceScore'] ?? json['compliance_score'])?.toDouble() ?? 0.0,
+      checksPassed: json['checksPassed'] ?? json['checks_passed'] ?? 0,
+      checksTotal: json['checksTotal'] ?? json['checks_total'] ?? 0,
       summary: json['summary'],
-      createdAt: DateTime.parse(json['createdAt']),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : (json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now()),
     );
   }
 

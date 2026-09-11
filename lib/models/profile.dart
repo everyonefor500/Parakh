@@ -45,18 +45,25 @@ class Profile {
   factory Profile.fromJson(Map<String, dynamic> json) {
     return Profile(
       id: json['id'],
-      fullName: json['fullName'],
-      email: json['email'],
-      phone: json['phone'],
-      role: UserRole.values.firstWhere((e) => e.name == json['role']),
+      fullName: json['fullName'] ?? json['full_name'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      role: UserRole.values.firstWhere(
+        (e) => e.name == (json['role'] ?? UserRole.consumer.name),
+        orElse: () => UserRole.consumer,
+      ),
       organization: json['organization'],
       designation: json['designation'],
       department: json['department'],
       state: json['state'],
       district: json['district'],
-      languagePreference: json['languagePreference'],
-      avatarUrl: json['avatarUrl'],
-      createdAt: DateTime.parse(json['createdAt']),
+      languagePreference: json['languagePreference'] ?? json['language_preference'],
+      avatarUrl: json['avatarUrl'] ?? json['avatar_url'],
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : (json['created_at'] != null
+              ? DateTime.parse(json['created_at'])
+              : DateTime.now()),
     );
   }
 

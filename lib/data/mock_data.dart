@@ -254,4 +254,39 @@ class MockData {
       updatedAt: DateTime.now().subtract(const Duration(hours: 5)),
     )
   ];
+
+  static final Product haldiramProduct = Product(
+      id: 'prod-haldiram',
+      name: 'Haldiram\'s Aloo Bhujia Sev',
+      brand: 'Haldiram\'s',
+      category: ProductCategory.food,
+      barcode: '8904004400731',
+      imageUrl: 'https://via.placeholder.com/150',
+      createdBy: 'prof-2',
+      createdAt: DateTime.now(),
+  );
+
+  static final Scan haldiramScan = Scan(
+      id: 'scan-haldiram',
+      productId: 'prod-haldiram',
+      scannedBy: 'prof-1',
+      imageUrl: 'https://via.placeholder.com/300',
+      source: ScanSource.camera,
+      ocrLanguage: 'en',
+      locationLat: 19.0760,
+      locationLng: 72.8777,
+      locationLabel: 'Mumbai, Maharashtra',
+      createdAt: DateTime.now(),
+  );
+
+  static final ComplianceVerdict haldiramVerdict = ComplianceVerdict(
+      id: 'verdict-haldiram',
+      scanId: 'scan-haldiram',
+      status: VerdictStatus.compliant,
+      complianceScore: 100.0,
+      checksPassed: 8,
+      checksTotal: 8,
+      summary: 'All 8 Legal Metrology mandatory declarations verified and approved.',
+      createdAt: DateTime.now(),
+  );
 }

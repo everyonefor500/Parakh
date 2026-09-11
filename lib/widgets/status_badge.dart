@@ -3,6 +3,7 @@ import '../models/compliance_verdict.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 
+/// A premium status badge with colored glow shadow and tinted border.
 class StatusBadge extends StatelessWidget {
   final VerdictStatus status;
 
@@ -12,19 +13,23 @@ class StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     Color bgColor;
     Color textColor;
-    
+    Color glowColor;
+
     switch (status) {
       case VerdictStatus.compliant:
-        bgColor = AppColors.statusCompliantGreen.withValues(alpha: 0.15);
+        bgColor = AppColors.statusCompliantGreen.withValues(alpha: 0.12);
         textColor = AppColors.statusCompliantGreen;
+        glowColor = AppColors.statusCompliantGlow;
         break;
       case VerdictStatus.review:
-        bgColor = AppColors.statusReviewAmber.withValues(alpha: 0.15);
+        bgColor = AppColors.statusReviewAmber.withValues(alpha: 0.12);
         textColor = AppColors.statusReviewAmber;
+        glowColor = AppColors.statusReviewGlow;
         break;
       case VerdictStatus.nonCompliant:
-        bgColor = AppColors.statusViolationRed.withValues(alpha: 0.15);
+        bgColor = AppColors.statusViolationRed.withValues(alpha: 0.12);
         textColor = AppColors.statusViolationRed;
+        glowColor = AppColors.statusViolationGlow;
         break;
     }
 
@@ -32,13 +37,19 @@ class StatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: textColor.withValues(alpha: 0.3),
+          width: 1,
+        ),
+        boxShadow: AppColors.statusGlow(glowColor),
       ),
       child: Text(
         status.label.toUpperCase(),
-        style: AppTextStyles.labelSmall.copyWith(
+        style: AppTextStyles.overline.copyWith(
           color: textColor,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 0.8,
         ),
       ),
     );

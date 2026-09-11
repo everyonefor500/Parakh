@@ -6,6 +6,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import 'status_badge.dart';
 
+/// A premium inspection card with floating shadow and accentBlue ripple.
 class InspectionCard extends StatelessWidget {
   final Scan scan;
   final ComplianceVerdict? verdict;
@@ -22,48 +23,87 @@ class InspectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: onTap,
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: AppColors.bgSecondary,
-                  borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    image: NetworkImage(scan.imageUrl),
-                    fit: BoxFit.cover,
+        border: Border.all(color: AppColors.cardBorder, width: 1),
+        boxShadow: AppColors.cardShadow,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(20),
+          splashColor: AppColors.accentBlue.withValues(alpha: 0.08),
+          highlightColor: AppColors.accentBlue.withValues(alpha: 0.04),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: [
+                // Product image thumbnail
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: AppColors.bgSecondary,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: AppColors.cardBorder, width: 1),
+                    image: scan.imageUrl.isNotEmpty
+                        ? DecorationImage(
+                            image: NetworkImage(scan.imageUrl),
+                            fit: BoxFit.cover,
+                          )
+                        : null,
+                  ),
+                  child: scan.imageUrl.isEmpty
+                      ? const Icon(Icons.inventory_2_outlined,
+                          color: AppColors.textTertiary, size: 24)
+                      : null,
+                ),
+                const SizedBox(width: 16),
+                // Content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        productName,
+                        style: AppTextStyles.titleMedium,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        DateFormat('MMM d, y • h:mm a').format(scan.createdAt),
+                        style: AppTextStyles.labelSmall,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      productName,
-                      style: AppTextStyles.titleMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                const SizedBox(width: 12),
+                // Status badge or pending icon
+                if (verdict != null)
+                  StatusBadge(status: verdict!.status)
+                else
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.bgTertiary,
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      DateFormat('MMM d, y • h:mm a').format(scan.createdAt),
-                      style: AppTextStyles.labelSmall,
+                    child: Text(
+                      'PENDING',
+                      style: AppTextStyles.overline.copyWith(
+                        color: AppColors.textTertiary,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ],
-                ),
-              ),
-              if (verdict != null) StatusBadge(status: verdict!.status),
-            ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
