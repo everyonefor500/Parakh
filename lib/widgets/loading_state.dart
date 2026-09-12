@@ -54,51 +54,51 @@ class _LoadingStateState extends State<LoadingState>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.accentBlue.withValues(alpha: 0.25),
-                      AppColors.accentBlue.withValues(alpha: 0.05),
+                      context.appColors.accentBlue.withValues(alpha: 0.25),
+                      context.appColors.accentBlue.withValues(alpha: 0.05),
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.accentBlue
+                      color: context.appColors.accentBlue
                           .withValues(alpha: 0.3 * _pulseAnim.value),
                       blurRadius: 32,
                       spreadRadius: 4,
                     ),
                   ],
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.shield_rounded,
-                  color: AppColors.accentBlue,
+                  color: context.appColors.accentBlue,
                   size: 36,
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 32),
+          SizedBox(height: 32),
           // Thin progress indicator
           SizedBox(
             width: 180,
             child: LinearProgressIndicator(
-              backgroundColor: AppColors.bgTertiary,
+              backgroundColor: context.appColors.bgTertiary,
               valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppColors.accentBlue),
+                  AlwaysStoppedAnimation<Color>(context.appColors.accentBlue),
               borderRadius: BorderRadius.circular(4),
               minHeight: 3,
             ),
           ),
           if (widget.message != null) ...[
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             Text(
               widget.message!,
               style: AppTextStyles.titleMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: context.appColors.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
           ],
           if (widget.subMessage != null) ...[
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(
               widget.subMessage!,
               style: AppTextStyles.bodyMedium,

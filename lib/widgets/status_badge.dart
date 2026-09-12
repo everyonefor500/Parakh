@@ -17,19 +17,19 @@ class StatusBadge extends StatelessWidget {
 
     switch (status) {
       case VerdictStatus.compliant:
-        bgColor = AppColors.statusCompliantGreen.withValues(alpha: 0.12);
-        textColor = AppColors.statusCompliantGreen;
-        glowColor = AppColors.statusCompliantGlow;
+        bgColor = context.appColors.statusCompliantGreen.withValues(alpha: 0.12);
+        textColor = context.appColors.statusCompliantGreen;
+        glowColor = context.appColors.statusCompliantGlow;
         break;
       case VerdictStatus.review:
-        bgColor = AppColors.statusReviewAmber.withValues(alpha: 0.12);
-        textColor = AppColors.statusReviewAmber;
-        glowColor = AppColors.statusReviewGlow;
+        bgColor = context.appColors.statusReviewAmber.withValues(alpha: 0.12);
+        textColor = context.appColors.statusReviewAmber;
+        glowColor = context.appColors.statusReviewGlow;
         break;
       case VerdictStatus.nonCompliant:
-        bgColor = AppColors.statusViolationRed.withValues(alpha: 0.12);
-        textColor = AppColors.statusViolationRed;
-        glowColor = AppColors.statusViolationGlow;
+        bgColor = context.appColors.statusViolationRed.withValues(alpha: 0.12);
+        textColor = context.appColors.statusViolationRed;
+        glowColor = context.appColors.statusViolationGlow;
         break;
     }
 
@@ -42,7 +42,7 @@ class StatusBadge extends StatelessWidget {
           color: textColor.withValues(alpha: 0.3),
           width: 1,
         ),
-        boxShadow: AppColors.statusGlow(glowColor),
+        boxShadow: context.appColors.statusGlow(glowColor),
       ),
       child: Text(
         status.label.toUpperCase(),

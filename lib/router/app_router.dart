@@ -21,10 +21,13 @@ import '../screens/scan/verdict_screen.dart';
 import '../screens/scan/violation_details_screen.dart';
 // FIX: Use the real HistoryScreen instead of the stub InspectionHistoryScreen
 import '../screens/history/history_screen.dart';
+import '../screens/reports/reports_list_screen.dart';
 import '../screens/reports/report_generation_screen.dart';
 import '../screens/reports/show_cause_notice_screen.dart';
 import '../screens/consumer/consumer_result_screen.dart';
 import '../screens/consumer/consumer_grievance_screen.dart';
+import '../screens/consumer/consumer_grievances_list_screen.dart';
+import '../screens/officer/officer_grievances_screen.dart';
 import '../screens/analytics/officer_analytics_screen.dart';
 import '../screens/profile/profile_screen.dart';
 import '../screens/profile/account_settings_screen.dart';
@@ -57,6 +60,9 @@ class AppRoutes {
 
   static const consumerResult = '/consumer/result/:scanId';
   static const consumerGrievance = '/consumer/grievance';
+  static const consumerGrievancesList = '/consumer/grievances';
+
+  static const officerGrievances = '/officer/grievances';
 
   static const analytics = '/analytics';
 
@@ -201,6 +207,22 @@ final GoRouter appRouter = GoRouter(
         child: const ConsumerGrievanceScreen(),
       ),
     ),
+    GoRoute(
+      path: AppRoutes.consumerGrievancesList,
+      pageBuilder: (context, state) => _fadeSlideTransition(
+        context: context,
+        state: state,
+        child: const ConsumerGrievancesListScreen(),
+      ),
+    ),
+    GoRoute(
+      path: AppRoutes.officerGrievances,
+      pageBuilder: (context, state) => _fadeSlideTransition(
+        context: context,
+        state: state,
+        child: const OfficerGrievancesScreen(),
+      ),
+    ),
 
 
 
@@ -219,7 +241,7 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.reportGeneration,
       pageBuilder: (context, state) {
         final verdictId = state.pathParameters['verdictId'];
-        final violations = state.extra as List<dynamic>?;
+        debugPrint('[NAV_LOG] app_router matched ReportGeneration route. Parsed verdictId parameter: $verdictId');
         return _fadeSlideTransition(
           context: context,
           state: state,
@@ -230,10 +252,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.showCauseNotice,
       pageBuilder: (context, state) {
+        final verdictId = state.pathParameters['verdictId'];
         return _fadeSlideTransition(
           context: context,
           state: state,
-          child: const ShowCauseNoticeScreen(),
+          child: ShowCauseNoticeScreen(verdictId: verdictId),
         );
       },
     ),
@@ -321,7 +344,7 @@ final GoRouter appRouter = GoRouter(
           pageBuilder: (context, state) => _fadeSlideTransition(
             context: context,
             state: state,
-            child: const ReportGenerationScreen(),
+            child: const ReportsListScreen(),
           ),
         ),
         GoRoute(
@@ -343,7 +366,8 @@ final GoRouter appRouter = GoRouter(
         path.startsWith(AppRoutes.history) ||
         path.startsWith(AppRoutes.reports) ||
         path.startsWith(AppRoutes.profile) ||
-        path.startsWith(AppRoutes.consumerGrievance);
+        path.startsWith(AppRoutes.consumerGrievance) ||
+        path.startsWith(AppRoutes.officerGrievances);
 
     if (isProtectedRoute) {
       final session = Supabase.instance.client.auth.currentSession;

@@ -5,13 +5,45 @@ import '../../router/app_router.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/primary_button.dart';
 
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../../providers/app_state_provider.dart';
+
 class ShowCauseNoticeScreen extends StatelessWidget {
-  const ShowCauseNoticeScreen({super.key});
+  final String? verdictId;
+  const ShowCauseNoticeScreen({super.key, this.verdictId});
 
   @override
   Widget build(BuildContext context) {
+    if (verdictId == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: const Center(child: Text('Verdict ID missing.')),
+      );
+    }
+
+    final appState = context.watch<AppStateProvider>();
+    final verdict = appState.allVerdicts.where((v) => v.id == verdictId).firstOrNull;
+    final scan = verdict != null ? appState.allScans.where((s) => s.id == verdict.scanId).firstOrNull : null;
+
+    if (verdict == null || scan == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Error')),
+        body: const Center(child: Text('Data not found.')),
+      );
+    }
+
+    final productLabel = scan.productId ?? 'Unknown Product';
+    final scanDate = DateFormat('dd-MMM-yyyy').format(scan.createdAt);
+    final dueDate = DateFormat('dd-MMM-yyyy').format(DateTime.now().add(const Duration(days: 15)));
+    
+    final violations = appState.violationsForVerdict(verdict.id);
+    final violationsText = violations.isEmpty 
+        ? 'No specific violations recorded.'
+        : violations.map((v) => 'Rule ${v.ruleId} (${v.issueTitle})').join(' and ');
+
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.appColors.bgPrimary,
       appBar: AppBar(
         title: const Text('Show Cause Notice'),
         leading: const BackButton(),
@@ -132,9 +164,9 @@ class ShowCauseNoticeScreen extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 13, color: Colors.black54),
                             ),
-                            const Text(
-                              'Fresh Foods Ltd',
-                              style: TextStyle(
+                            Text(
+                              productLabel,
+                              style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.black87,
@@ -150,9 +182,9 @@ class ShowCauseNoticeScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            const Text(
-                              'During an inspection on 10-Sep-2026, it was observed that your product "Fresh Apple Juice" is in violation of Rule 6(1)(e) (Missing Expiry Date) and Rule 6(1)(c) (Improper MRP Format).',
-                              style: TextStyle(
+                            Text(
+                              'During an inspection on $scanDate, it was observed that your product "$productLabel" is in violation of $violationsText.',
+                              style: const TextStyle(
                                   fontSize: 13,
                                   color: Colors.black87,
                                   height: 1.6),
@@ -182,7 +214,7 @@ class ShowCauseNoticeScreen extends StatelessWidget {
                                       size: 16),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Response due by: 25-Sep-2026',
+                                    'Response due by: $dueDate',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.red.shade700,

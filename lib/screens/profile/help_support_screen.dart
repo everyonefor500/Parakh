@@ -7,7 +7,7 @@ class HelpSupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.appColors.bgPrimary,
       appBar: AppBar(title: const Text('Help & Support')),
       body: const Center(child: Text('Support options coming soon')),
     );

@@ -6,6 +6,7 @@ import 'theme/app_theme.dart';
 import 'providers/app_state_provider.dart';
 import 'providers/role_provider.dart';
 import 'providers/scan_flow_provider.dart';
+import 'providers/theme_provider.dart';
 import 'router/app_router.dart';
 
 void main() async {
@@ -25,6 +26,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AppStateProvider()),
         ChangeNotifierProvider(create: (_) => RoleProvider()),
         ChangeNotifierProvider(create: (_) => ScanFlowProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const ParakhApp(),
     ),
@@ -36,10 +38,13 @@ class ParakhApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
     return MaterialApp.router(
       title: 'Parakh',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: themeProvider.themeMode,
       routerConfig: appRouter,
     );
   }

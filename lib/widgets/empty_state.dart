@@ -61,17 +61,17 @@ class _EmptyStateState extends State<EmptyState>
                   height: 88,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.bgTertiary,
-                    border: Border.all(color: AppColors.cardBorder, width: 1),
+                    color: context.appColors.bgTertiary,
+                    border: Border.all(color: context.appColors.cardBorder, width: 1),
                   ),
-                  child: Icon(widget.icon, color: AppColors.textTertiary, size: 36),
+                  child: Icon(widget.icon, color: context.appColors.textTertiary, size: 36),
                 ),
               ),
             ),
             const SizedBox(height: 24),
             Text(
               widget.title,
-              style: AppTextStyles.titleMedium.copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.titleMedium.copyWith(color: context.appColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             if (widget.message != null) ...[

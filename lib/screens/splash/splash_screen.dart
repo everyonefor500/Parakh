@@ -108,7 +108,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.appColors.bgPrimary,
       body: Stack(
         children: [
           // Radial bg glow
@@ -122,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen>
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.accentBlue.withValues(alpha: 0.12 * _glow.value),
+                      context.appColors.accentBlue.withValues(alpha: 0.12 * _glow.value),
                       Colors.transparent,
                     ],
                     radius: 0.8,
@@ -150,34 +150,34 @@ class _SplashScreenState extends State<SplashScreen>
                           shape: BoxShape.circle,
                           gradient: RadialGradient(
                             colors: [
-                              AppColors.accentBlue.withValues(alpha: 0.22),
-                              AppColors.accentBlue.withValues(alpha: 0.05),
+                              context.appColors.accentBlue.withValues(alpha: 0.22),
+                              context.appColors.accentBlue.withValues(alpha: 0.05),
                             ],
                           ),
                           border: Border.all(
                             color:
-                                AppColors.accentBlue.withValues(alpha: 0.4),
+                                context.appColors.accentBlue.withValues(alpha: 0.4),
                             width: 1.5,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.accentBlue
+                              color: context.appColors.accentBlue
                                   .withValues(alpha: 0.35 * _glow.value),
                               blurRadius: 48,
                               spreadRadius: 8,
                             ),
                           ],
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Symbols.shield_rounded,
                           size: 56,
-                          color: AppColors.accentBlue,
+                          color: context.appColors.accentBlue,
                           fill: 1,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
                   FadeTransition(
                     opacity: _glow,
                     child: Column(
@@ -186,7 +186,7 @@ class _SplashScreenState extends State<SplashScreen>
                           'Parakh',
                           style: AppTextStyles.headlineLarge,
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           'AI Compliance Platform',
                           style: AppTextStyles.bodyMedium,

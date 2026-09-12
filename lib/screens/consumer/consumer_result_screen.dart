@@ -73,11 +73,11 @@ class _ConsumerResultScreenState extends State<ConsumerResultScreen>
   @override
   Widget build(BuildContext context) {
     final verdictColor = isCompliant
-        ? AppColors.statusCompliantGreen
-        : AppColors.statusViolationRed;
+        ? context.appColors.statusCompliantGreen
+        : context.appColors.statusViolationRed;
     final verdictGlow = isCompliant
-        ? AppColors.statusCompliantGlow
-        : AppColors.statusViolationGlow;
+        ? context.appColors.statusCompliantGlow
+        : context.appColors.statusViolationGlow;
     final verdictIcon =
         isCompliant ? Symbols.check_circle_rounded : Symbols.warning_rounded;
     final verdictLabel = isCompliant ? 'Looks Good!' : 'Warning';
@@ -94,7 +94,7 @@ class _ConsumerResultScreenState extends State<ConsumerResultScreen>
               gradient: RadialGradient(
                 colors: [
                   verdictColor.withValues(alpha: 0.07),
-                  AppColors.bgPrimary,
+                  context.appColors.bgPrimary,
                 ],
                 radius: 1.0,
                 center: const Alignment(0, -0.4),

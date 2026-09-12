@@ -22,15 +22,15 @@ class StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = iconColor ?? AppColors.accentBlue;
+    final color = iconColor ?? context.appColors.accentBlue;
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: context.appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class StatCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               trend!,
-              style: AppTextStyles.overline.copyWith(color: AppColors.statusCompliantGreen),
+              style: AppTextStyles.overline.copyWith(color: context.appColors.statusCompliantGreen),
             ),
           ],
         ],

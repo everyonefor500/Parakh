@@ -32,19 +32,19 @@ class FilterChipRow extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  gradient: isSelected ? AppColors.primaryButtonGradient : null,
-                  color: isSelected ? null : AppColors.bgSecondary,
+                  gradient: isSelected ? context.appColors.primaryButtonGradient : null,
+                  color: isSelected ? null : context.appColors.bgSecondary,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
-                        : AppColors.cardBorder,
+                        : context.appColors.cardBorder,
                     width: 1,
                   ),
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: AppColors.accentBlue.withValues(alpha: 0.25),
+                            color: context.appColors.accentBlue.withValues(alpha: 0.25),
                             blurRadius: 10,
                             offset: const Offset(0, 3),
                           ),
@@ -55,8 +55,8 @@ class FilterChipRow extends StatelessWidget {
                   filter,
                   style: AppTextStyles.labelMedium.copyWith(
                     color: isSelected
-                        ? AppColors.textPrimary
-                        : AppColors.textSecondary,
+                        ? context.appColors.textPrimary
+                        : context.appColors.textSecondary,
                     fontWeight:
                         isSelected ? FontWeight.w700 : FontWeight.w500,
                   ),

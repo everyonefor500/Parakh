@@ -47,23 +47,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: AppColors.accentBlue.withValues(alpha: 0.1),
+                      color: context.appColors.accentBlue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AppColors.accentBlue.withValues(alpha: 0.25),
+                        color: context.appColors.accentBlue.withValues(alpha: 0.25),
                         width: 1,
                       ),
                     ),
                     child: Text(
                       '${scans.length} scans',
                       style: AppTextStyles.labelMedium
-                          .copyWith(color: AppColors.accentBlue),
+                          .copyWith(color: context.appColors.accentBlue),
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
 
             // ── Filter Chips ─────────────────────────────────
             FilterChipRow(
@@ -97,10 +97,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
                             padding: const EdgeInsets.only(right: 24.0),
                             margin: const EdgeInsets.only(bottom: 12.0),
                             decoration: BoxDecoration(
-                              color: AppColors.statusViolationRed,
+                              color: context.appColors.statusViolationRed,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Symbols.delete_rounded,
                               color: Colors.white,
                               size: 28,
@@ -112,17 +112,17 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  backgroundColor: AppColors.cardBackground,
+                                  backgroundColor: context.appColors.cardBackground,
                                   title: Text("Confirm Delete", style: AppTextStyles.titleLarge),
                                   content: Text("Are you sure you want to delete this scan? This action cannot be undone.", style: AppTextStyles.bodyMedium),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () => Navigator.of(context).pop(false),
-                                      child: Text("CANCEL", style: AppTextStyles.labelMedium.copyWith(color: AppColors.textSecondary)),
+                                      child: Text("CANCEL", style: AppTextStyles.labelMedium.copyWith(color: context.appColors.textSecondary)),
                                     ),
                                     TextButton(
                                       onPressed: () => Navigator.of(context).pop(true),
-                                      child: Text("DELETE", style: AppTextStyles.labelMedium.copyWith(color: AppColors.statusViolationRed)),
+                                      child: Text("DELETE", style: AppTextStyles.labelMedium.copyWith(color: context.appColors.statusViolationRed)),
                                     ),
                                   ],
                                 );
@@ -134,18 +134,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               await context.read<AppStateProvider>().deleteScan(scan.id);
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
+                                  SnackBar(
                                     content: Text('Scan deleted successfully'),
-                                    backgroundColor: AppColors.statusCompliantGreen,
+                                    backgroundColor: context.appColors.statusCompliantGreen,
                                   ),
                                 );
                               }
                             } catch (e) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
+                                  SnackBar(
                                     content: Text('Failed to delete scan'),
-                                    backgroundColor: AppColors.statusViolationRed,
+                                    backgroundColor: context.appColors.statusViolationRed,
                                   ),
                                 );
                                 // Refresh to restore item

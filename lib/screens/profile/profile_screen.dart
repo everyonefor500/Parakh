@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../providers/role_provider.dart';
 import '../../providers/app_state_provider.dart';
+import '../../providers/theme_provider.dart';
 import '../../router/app_router.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -14,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = context.watch<ThemeProvider>();
     final roleProvider = context.watch<RoleProvider>();
     final roleName =
         roleProvider.selectedRole?.name.toUpperCase() ?? 'USER';
@@ -34,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppColors.accentBlue.withValues(alpha: 0.08),
+                      context.appColors.accentBlue.withValues(alpha: 0.08),
                       Colors.transparent,
                     ],
                     begin: Alignment.topCenter,
@@ -49,17 +51,17 @@ class ProfileScreen extends StatelessWidget {
                       height: 96,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: const LinearGradient(
+                        gradient: LinearGradient(
                           colors: [
-                            AppColors.accentBlueGlow,
-                            AppColors.accentBlue,
+                            context.appColors.accentBlueGlow,
+                            context.appColors.accentBlue,
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.accentBlue
+                            color: context.appColors.accentBlue
                                 .withValues(alpha: 0.35),
                             blurRadius: 24,
                             spreadRadius: 4,
@@ -82,20 +84,20 @@ class ProfileScreen extends StatelessWidget {
                           horizontal: 14, vertical: 6),
                       decoration: BoxDecoration(
                         color:
-                            AppColors.accentBlue.withValues(alpha: 0.12),
+                            context.appColors.accentBlue.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color:
-                              AppColors.accentBlue.withValues(alpha: 0.3),
+                              context.appColors.accentBlue.withValues(alpha: 0.3),
                           width: 1,
                         ),
                         boxShadow:
-                            AppColors.statusGlow(AppColors.accentBlue),
+                            context.appColors.statusGlow(context.appColors.accentBlue),
                       ),
                       child: Text(
                         roleName,
                         style: AppTextStyles.overline.copyWith(
-                          color: AppColors.accentBlue,
+                          color: context.appColors.accentBlue,
                           fontWeight: FontWeight.w700,
                           letterSpacing: 1.0,
                         ),
@@ -113,8 +115,22 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // Appearance group
+                    _buildGroupLabel('Appearance', context),
+                    const SizedBox(height: 8),
+                    _buildSettingsGroup([
+                      _SettingsToggleTile(
+                        icon: Symbols.dark_mode_rounded,
+                        label: 'Dark Mode',
+                        value: themeProvider.isDarkMode,
+                        onChanged: (val) => themeProvider.toggleTheme(),
+                        isLast: true,
+                      ),
+                    ], context),
+                    const SizedBox(height: 24),
+
                     // Account group
-                    _buildGroupLabel('Account'),
+                    _buildGroupLabel('Account', context),
                     const SizedBox(height: 8),
                     _buildSettingsGroup([
                       _SettingsTile(
@@ -133,11 +149,11 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () => context.push(AppRoutes.privacySecurity),
                         isLast: true,
                       ),
-                    ]),
+                    ], context),
                     const SizedBox(height: 24),
 
                     // Support group
-                    _buildGroupLabel('Support'),
+                    _buildGroupLabel('Support', context),
                     const SizedBox(height: 8),
                     _buildSettingsGroup([
                       _SettingsTile(
@@ -146,17 +162,17 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () => context.push(AppRoutes.helpSupport),
                         isLast: true,
                       ),
-                    ]),
+                    ], context),
                     const SizedBox(height: 24),
 
                     // Danger group
-                    _buildGroupLabel('Session'),
+                    _buildGroupLabel('Session', context),
                     const SizedBox(height: 8),
                     _buildSettingsGroup([
                       _SettingsTile(
                         icon: Symbols.logout_rounded,
                         label: 'Log Out',
-                        accentColor: AppColors.statusViolationRed,
+                        accentColor: context.appColors.statusViolationRed,
                         showArrow: false,
                         onTap: () async {
                           await Supabase.instance.client.auth.signOut();
@@ -168,7 +184,7 @@ class ProfileScreen extends StatelessWidget {
                         },
                         isLast: true,
                       ),
-                    ]),
+                    ], context),
                     const SizedBox(height: 100),
                   ],
                 ),
@@ -180,23 +196,23 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGroupLabel(String label) {
+  Widget _buildGroupLabel(String label, BuildContext context) {
     return Text(
       label.toUpperCase(),
       style: AppTextStyles.overline.copyWith(
-        color: AppColors.textTertiary,
+        color: context.appColors.textTertiary,
         letterSpacing: 1.2,
       ),
     );
   }
 
-  Widget _buildSettingsGroup(List<_SettingsTile> tiles) {
+  Widget _buildSettingsGroup(List<Widget> tiles, BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: context.appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(20),
@@ -225,8 +241,8 @@ class _SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = accentColor ?? AppColors.textPrimary;
-    final iconBg = accentColor ?? AppColors.accentBlue;
+    final color = accentColor ?? context.appColors.textPrimary;
+    final iconBg = accentColor ?? context.appColors.accentBlue;
 
     return Column(
       children: [
@@ -234,7 +250,7 @@ class _SettingsTile extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: onTap,
-            splashColor: AppColors.accentBlue.withValues(alpha: 0.08),
+            splashColor: context.appColors.accentBlue.withValues(alpha: 0.08),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                   horizontal: 20, vertical: 14),
@@ -266,7 +282,7 @@ class _SettingsTile extends StatelessWidget {
                   if (showArrow)
                     Icon(
                       Symbols.chevron_right_rounded,
-                      color: AppColors.textTertiary,
+                      color: context.appColors.textTertiary,
                       size: 18,
                     ),
                 ],
@@ -279,7 +295,77 @@ class _SettingsTile extends StatelessWidget {
             height: 1,
             thickness: 1,
             indent: 74,
-            color: AppColors.dividerSubtle,
+            color: context.appColors.dividerSubtle,
+          ),
+      ],
+    );
+  }
+}
+
+class _SettingsToggleTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  final bool isLast;
+
+  const _SettingsToggleTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.isLast = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final color = context.appColors.textPrimary;
+    final iconBg = context.appColors.accentBlue;
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      iconBg.withValues(alpha: 0.18),
+                      iconBg.withValues(alpha: 0.07),
+                    ],
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: iconBg, size: 20, fill: 1),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Text(
+                  label,
+                  style: AppTextStyles.titleMedium.copyWith(color: color),
+                ),
+              ),
+              Switch(
+                value: value,
+                onChanged: onChanged,
+                activeThumbColor: context.appColors.accentBlue,
+                activeTrackColor: context.appColors.accentBlue.withValues(alpha: 0.2),
+                inactiveThumbColor: context.appColors.textSecondary,
+                inactiveTrackColor: context.appColors.bgSecondary,
+              ),
+            ],
+          ),
+        ),
+        if (!isLast)
+          Divider(
+            height: 1,
+            thickness: 1,
+            indent: 74,
+            color: context.appColors.dividerSubtle,
           ),
       ],
     );

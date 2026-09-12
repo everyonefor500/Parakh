@@ -82,15 +82,15 @@ class _PrimaryButtonState extends State<PrimaryButton>
             height: 56,
             decoration: BoxDecoration(
               gradient: enabled
-                  ? AppColors.primaryButtonGradient
-                  : const LinearGradient(
-                      colors: [AppColors.bgTertiary, AppColors.bgTertiary],
+                  ? context.appColors.primaryButtonGradient
+                  : LinearGradient(
+                      colors: [context.appColors.bgTertiary, context.appColors.bgTertiary],
                     ),
               borderRadius: BorderRadius.circular(14),
               boxShadow: enabled
                   ? [
                       BoxShadow(
-                        color: AppColors.accentBlue.withValues(alpha: 0.35),
+                        color: context.appColors.accentBlue.withValues(alpha: 0.35),
                         blurRadius: 20,
                         spreadRadius: 0,
                         offset: const Offset(0, 6),
@@ -100,11 +100,11 @@ class _PrimaryButtonState extends State<PrimaryButton>
             ),
             child: Center(
               child: widget.isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       height: 22,
                       width: 22,
                       child: CircularProgressIndicator(
-                        color: AppColors.textPrimary,
+                        color: context.appColors.textPrimary,
                         strokeWidth: 2.5,
                       ),
                     )
@@ -112,8 +112,8 @@ class _PrimaryButtonState extends State<PrimaryButton>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (widget.icon != null) ...[
-                          Icon(widget.icon, color: AppColors.textPrimary, size: 20),
-                          const SizedBox(width: 8),
+                          Icon(widget.icon, color: context.appColors.textPrimary, size: 20),
+                          SizedBox(width: 8),
                         ],
                         Text(widget.text, style: AppTextStyles.buttonText),
                       ],

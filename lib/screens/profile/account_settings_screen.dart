@@ -88,14 +88,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         context.read<AppStateProvider>().login(updatedProfile);
         
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Profile updated successfully'), backgroundColor: AppColors.statusCompliantGreen),
+          SnackBar(content: Text('Profile updated successfully'), backgroundColor: context.appColors.statusCompliantGreen),
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating profile: $e'), backgroundColor: AppColors.statusViolationRed),
+          SnackBar(content: Text('Error updating profile: $e'), backgroundColor: context.appColors.statusViolationRed),
         );
       }
     } finally {
@@ -112,14 +112,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         decoration: InputDecoration(
           labelText: label,
           filled: true,
-          fillColor: AppColors.bgSecondary,
+          fillColor: context.appColors.bgSecondary,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.cardBorder),
+            borderSide: BorderSide(color: context.appColors.cardBorder),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.cardBorder),
+            borderSide: BorderSide(color: context.appColors.cardBorder),
           ),
         ),
       ),
@@ -129,7 +129,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.appColors.bgPrimary,
       appBar: AppBar(
         title: const Text('Account Settings'),
       ),
@@ -157,10 +157,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                     value: _languagePreference, // ignore: deprecated_member_use
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: AppColors.bgSecondary,
+                      fillColor: context.appColors.bgSecondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: AppColors.cardBorder),
+                        borderSide: BorderSide(color: context.appColors.cardBorder),
                       ),
                     ),
                     items: const [

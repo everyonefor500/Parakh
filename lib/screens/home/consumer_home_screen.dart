@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import '../../providers/app_state_provider.dart';
 import '../../router/app_router.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
@@ -8,11 +10,49 @@ import '../../widgets/stat_card.dart';
 import '../../widgets/section_header.dart';
 import '../../widgets/empty_state.dart';
 
-class ConsumerHomeScreen extends StatelessWidget {
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class ConsumerHomeScreen extends StatefulWidget {
   const ConsumerHomeScreen({super.key});
 
   @override
+  State<ConsumerHomeScreen> createState() => _ConsumerHomeScreenState();
+}
+
+class _ConsumerHomeScreenState extends State<ConsumerHomeScreen> {
+  int _grievancesCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchGrievancesCount();
+  }
+
+  Future<void> _fetchGrievancesCount() async {
+    final user = context.read<AppStateProvider>().currentUser;
+    if (user != null) {
+      try {
+        final response = await Supabase.instance.client
+            .from('complaints')
+            .select('id')
+            .eq('submitted_by', user.id);
+        if (mounted) {
+          setState(() {
+            _grievancesCount = (response as List).length;
+          });
+        }
+      } catch (e) {
+        debugPrint('Error fetching grievances count: $e');
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
+    final scansCount = appState.allScans.length;
+    final recentScans = appState.allScans.take(3).toList();
+    
     return Scaffold(
       body: Stack(
         children: [
@@ -26,7 +66,7 @@ class ConsumerHomeScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.statusReviewAmber.withValues(alpha: 0.05),
+                    context.appColors.statusReviewAmber.withValues(alpha: 0.05),
                     Colors.transparent,
                   ],
                   begin: Alignment.topCenter,
@@ -51,7 +91,7 @@ class ConsumerHomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('Hello,', style: AppTextStyles.bodyMedium),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text('Consumer',
                               style: AppTextStyles.headlineLarge),
                         ],
@@ -63,37 +103,37 @@ class ConsumerHomeScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.statusReviewAmber
+                              context.appColors.statusReviewAmber
                                   .withValues(alpha: 0.3),
-                              AppColors.statusReviewAmber
+                              context.appColors.statusReviewAmber
                                   .withValues(alpha: 0.1),
                             ],
                           ),
                           border: Border.all(
-                            color: AppColors.statusReviewAmber
+                            color: context.appColors.statusReviewAmber
                                 .withValues(alpha: 0.4),
                             width: 1.5,
                           ),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Symbols.person_rounded,
-                          color: AppColors.statusReviewAmber,
+                          color: context.appColors.statusReviewAmber,
                           size: 24,
                           fill: 1,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Hero CTA ────────────────────────────────
                   Container(
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      gradient: const LinearGradient(
+                      gradient: LinearGradient(
                         colors: [
-                          AppColors.accentBlue,
-                          AppColors.accentBlueDark,
+                          context.appColors.accentBlue,
+                          context.appColors.accentBlueDark,
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
@@ -101,7 +141,7 @@ class ConsumerHomeScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(24),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.accentBlue.withValues(alpha: 0.35),
+                          color: context.appColors.accentBlue.withValues(alpha: 0.35),
                           blurRadius: 28,
                           offset: const Offset(0, 8),
                         ),
@@ -115,13 +155,13 @@ class ConsumerHomeScreen extends StatelessWidget {
                           style: AppTextStyles.titleLarge.copyWith(
                               color: Colors.white),
                         ),
-                        const SizedBox(height: 8),
+                        SizedBox(height: 8),
                         Text(
                           'Scan any product label to instantly check compliance with Legal Metrology standards.',
                           style: AppTextStyles.bodyMedium.copyWith(
                               color: Colors.white.withValues(alpha: 0.75)),
                         ),
-                        const SizedBox(height: 20),
+                        SizedBox(height: 20),
                         GestureDetector(
                           onTap: () => context.push(AppRoutes.scan),
                           child: Container(
@@ -141,13 +181,13 @@ class ConsumerHomeScreen extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Symbols.qr_code_scanner_rounded,
-                                    color: AppColors.accentBlue, size: 20, fill: 1),
-                                const SizedBox(width: 8),
+                                Icon(Symbols.qr_code_scanner_rounded,
+                                    color: context.appColors.accentBlue, size: 20, fill: 1),
+                                SizedBox(width: 8),
                                 Text(
                                   'Scan Now',
                                   style: AppTextStyles.labelLarge.copyWith(
-                                    color: AppColors.accentBlue,
+                                    color: context.appColors.accentBlue,
                                   ),
                                 ),
                               ],
@@ -157,31 +197,34 @@ class ConsumerHomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Stats ──────────────────────────────────
-                  const Row(
+                  Row(
                     children: [
                       Expanded(
                         child: StatCard(
                           title: 'My Scans',
-                          value: '12',
+                          value: scansCount.toString(),
                           icon: Symbols.history_rounded,
-                          iconColor: AppColors.accentBlue,
+                          iconColor: context.appColors.accentBlue,
                         ),
                       ),
                       SizedBox(width: 16),
                       Expanded(
-                        child: StatCard(
-                          title: 'Grievances',
-                          value: '1',
-                          icon: Symbols.report_problem_rounded,
-                          iconColor: AppColors.statusReviewAmber,
+                        child: GestureDetector(
+                          onTap: () => context.push(AppRoutes.consumerGrievancesList),
+                          child: StatCard(
+                            title: 'Grievances',
+                            value: _grievancesCount.toString(),
+                            icon: Symbols.report_problem_rounded,
+                            iconColor: context.appColors.statusReviewAmber,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Recent Activity ─────────────────────────
                   SectionHeader(
@@ -189,13 +232,30 @@ class ConsumerHomeScreen extends StatelessWidget {
                     actionText: 'View All',
                     onActionTap: () => context.go(AppRoutes.history),
                   ),
-                  EmptyState(
-                    icon: Symbols.receipt_long_rounded,
-                    title: 'No recent activity',
-                    message: 'Products you scan will appear here.',
-                  ),
+                  if (recentScans.isEmpty)
+                    EmptyState(
+                      icon: Symbols.receipt_long_rounded,
+                      title: 'No recent activity',
+                      message: 'Products you scan will appear here.',
+                    )
+                  else
+                    ...recentScans.map((scan) {
+                      final verdict = appState.verdictForScan(scan.id);
+                      return ListTile(
+                        title: Text(scan.productId ?? 'Unknown Product', style: AppTextStyles.bodyLarge),
+                        subtitle: Text(scan.createdAt.toLocal().toString().split('.')[0]),
+                        trailing: Icon(Symbols.chevron_right_rounded, color: context.appColors.textSecondary),
+                        onTap: () {
+                          if (verdict != null) {
+                            context.push(AppRoutes.scanVerdict);
+                          } else {
+                            context.push(AppRoutes.scanExtracted);
+                          }
+                        },
+                      );
+                    }),
 
-                  const SizedBox(height: 100),
+                  SizedBox(height: 100),
                 ],
               ),
             ),
@@ -207,7 +267,7 @@ class ConsumerHomeScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: AppColors.statusViolationRed.withValues(alpha: 0.35),
+              color: context.appColors.statusViolationRed.withValues(alpha: 0.35),
               blurRadius: 20,
               offset: const Offset(0, 6),
             ),
@@ -216,9 +276,9 @@ class ConsumerHomeScreen extends StatelessWidget {
         child: FloatingActionButton.extended(
           heroTag: 'consumer_grievance_fab',
           onPressed: () => context.push(AppRoutes.consumerGrievance),
-          backgroundColor: AppColors.statusViolationRed,
+          backgroundColor: context.appColors.statusViolationRed,
           elevation: 0,
-          icon: const Icon(Symbols.report_rounded,
+          icon: Icon(Symbols.report_rounded,
               color: Colors.white, size: 20, fill: 1),
           label: Text('File Grievance',
               style: AppTextStyles.labelLarge.copyWith(color: Colors.white)),

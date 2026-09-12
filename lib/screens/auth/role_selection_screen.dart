@@ -18,9 +18,9 @@ class RoleSelectionScreen extends StatelessWidget {
         children: [
           // Background gradient
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF0D1526), AppColors.bgPrimary],
+                colors: [Color(0xFF0D1526), context.appColors.bgPrimary],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -32,17 +32,17 @@ class RoleSelectionScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   Text(
                     'Choose your role',
                     style: AppTextStyles.headlineLarge,
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   Text(
                     'Personalized experience based on who you are.',
                     style: AppTextStyles.bodyMedium,
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: 24),
                   _buildRoleCard(
                     context,
                     role: UserRole.officer,
@@ -50,11 +50,11 @@ class RoleSelectionScreen extends StatelessWidget {
                     description:
                         'Scan products, generate notices, and manage compliance.',
                     icon: Symbols.admin_panel_settings_rounded,
-                    accentColor: AppColors.accentBlue,
+                    accentColor: context.appColors.accentBlue,
                     index: 0,
                   ),
 
-                  const SizedBox(height: 16),
+                  SizedBox(height: 16),
                   _buildRoleCard(
                     context,
                     role: UserRole.consumer,
@@ -62,7 +62,7 @@ class RoleSelectionScreen extends StatelessWidget {
                     description:
                         'Scan products to verify compliance and file grievances.',
                     icon: Symbols.person_rounded,
-                    accentColor: AppColors.statusReviewAmber,
+                    accentColor: context.appColors.statusReviewAmber,
                     index: 2,
                   ),
                 ],
@@ -197,8 +197,8 @@ class _AnimatedRoleCardState extends State<_AnimatedRoleCard>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: _hovering
-                    ? AppColors.cardBackgroundElevated
-                    : AppColors.cardBackground,
+                    ? context.appColors.cardBackgroundElevated
+                    : context.appColors.cardBackground,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: _hovering
@@ -238,13 +238,13 @@ class _AnimatedRoleCardState extends State<_AnimatedRoleCard>
                     child: Icon(widget.icon,
                         size: 28, color: widget.accentColor, fill: 1),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(widget.title, style: AppTextStyles.titleLarge),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(widget.description,
                             style: AppTextStyles.bodyMedium),
                       ],

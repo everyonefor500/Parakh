@@ -23,25 +23,25 @@ class AppBottomNavBar extends StatelessWidget {
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 16),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
         decoration: BoxDecoration(
-          color: AppColors.bgSecondary,
+          color: context.appColors.bgSecondary,
           borderRadius: BorderRadius.circular(32),
-          border: Border.all(color: AppColors.cardBorder, width: 1),
-          boxShadow: AppColors.navShadow,
+          border: Border.all(color: context.appColors.cardBorder, width: 1),
+          boxShadow: context.appColors.navShadow,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildNavItem(0, Symbols.home_rounded, 'Home'),
-            _buildNavItem(1, Symbols.history_rounded, 'History'),
-            _buildNavItem(2, Symbols.description_rounded, 'Reports'),
-            _buildNavItem(3, Symbols.person_rounded, 'Profile'),
+            _buildNavItem(context, 0, Symbols.home_rounded, 'Home'),
+            _buildNavItem(context, 1, Symbols.history_rounded, 'History'),
+            _buildNavItem(context, 2, Symbols.description_rounded, 'Reports'),
+            _buildNavItem(context, 3, Symbols.person_rounded, 'Profile'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(int index, IconData icon, String label) {
+  Widget _buildNavItem(BuildContext context, int index, IconData icon, String label) {
     final isSelected = currentIndex == index;
 
     return Expanded(
@@ -56,12 +56,12 @@ class AppBottomNavBar extends StatelessWidget {
               curve: Curves.easeInOut,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                gradient: isSelected ? AppColors.primaryButtonGradient : null,
+                gradient: isSelected ? context.appColors.primaryButtonGradient : null,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: isSelected
                     ? [
                         BoxShadow(
-                          color: AppColors.accentBlue.withValues(alpha: 0.3),
+                          color: context.appColors.accentBlue.withValues(alpha: 0.3),
                           blurRadius: 12,
                           offset: const Offset(0, 3),
                         ),
@@ -72,8 +72,8 @@ class AppBottomNavBar extends StatelessWidget {
                 icon,
                 fill: isSelected ? 1.0 : 0.0,
                 color: isSelected
-                    ? AppColors.textPrimary
-                    : AppColors.textSecondary,
+                    ? context.appColors.textPrimary
+                    : context.appColors.textSecondary,
                 size: 22,
               ),
             ),
@@ -82,8 +82,8 @@ class AppBottomNavBar extends StatelessWidget {
               duration: const Duration(milliseconds: 220),
               style: AppTextStyles.overline.copyWith(
                 color: isSelected
-                    ? AppColors.accentBlue
-                    : AppColors.textTertiary,
+                    ? context.appColors.accentBlue
+                    : context.appColors.textTertiary,
                 fontWeight:
                     isSelected ? FontWeight.w700 : FontWeight.w500,
                 fontSize: 10,

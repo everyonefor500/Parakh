@@ -7,7 +7,7 @@ class PrivacySecurityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgPrimary,
+      backgroundColor: context.appColors.bgPrimary,
       appBar: AppBar(title: const Text('Privacy & Security')),
       body: const Center(child: Text('Privacy settings coming soon')),
     );

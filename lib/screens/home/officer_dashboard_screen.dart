@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../models/compliance_verdict.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -38,7 +37,7 @@ class OfficerDashboardScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.accentBlue.withValues(alpha: 0.07),
+                    context.appColors.accentBlue.withValues(alpha: 0.07),
                     Colors.transparent,
                   ],
                   begin: Alignment.topCenter,
@@ -64,7 +63,7 @@ class OfficerDashboardScreen extends StatelessWidget {
                         children: [
                           Text('Welcome back,',
                               style: AppTextStyles.bodyMedium),
-                          const SizedBox(height: 2),
+                          SizedBox(height: 2),
                           Text('Officer', style: AppTextStyles.headlineLarge),
                         ],
                       ),
@@ -76,34 +75,34 @@ class OfficerDashboardScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.accentBlue.withValues(alpha: 0.3),
-                              AppColors.accentBlue.withValues(alpha: 0.1),
+                              context.appColors.accentBlue.withValues(alpha: 0.3),
+                              context.appColors.accentBlue.withValues(alpha: 0.1),
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
                               color:
-                                  AppColors.accentBlue.withValues(alpha: 0.25),
+                                  context.appColors.accentBlue.withValues(alpha: 0.25),
                               blurRadius: 16,
                               spreadRadius: 2,
                             ),
                           ],
                           border: Border.all(
                             color:
-                                AppColors.accentBlue.withValues(alpha: 0.4),
+                                context.appColors.accentBlue.withValues(alpha: 0.4),
                             width: 1.5,
                           ),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Symbols.person_rounded,
-                          color: AppColors.accentBlue,
+                          color: context.appColors.accentBlue,
                           size: 24,
                           fill: 1,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Stats ─────────────────────────────────────
                   Row(
@@ -113,26 +112,26 @@ class OfficerDashboardScreen extends StatelessWidget {
                           title: 'Total Scans',
                           value: totalScans.toString(),
                           icon: Symbols.qr_code_scanner_rounded,
-                          iconColor: AppColors.accentBlue,
+                          iconColor: context.appColors.accentBlue,
                           trend: totalScans > 0 ? '↑ 100% this week' : null,
                         ),
                       ),
-                      const SizedBox(width: 16),
+                      SizedBox(width: 16),
                       Expanded(
                         child: StatCard(
                           title: 'Violations',
                           value: violationsCount.toString(),
                           icon: Symbols.assignment_late_rounded,
-                          iconColor: AppColors.statusViolationRed,
+                          iconColor: context.appColors.statusViolationRed,
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Quick Actions ─────────────────────────────
                   _buildQuickActions(context),
-                  const SizedBox(height: 32),
+                  SizedBox(height: 32),
 
                   // ── Recent Inspections ────────────────────────
                   SectionHeader(
@@ -168,7 +167,7 @@ class OfficerDashboardScreen extends StatelessWidget {
                       );
                     }),
 
-                  const SizedBox(height: 100),
+                  SizedBox(height: 100),
                 ],
               ),
             ),
@@ -183,33 +182,46 @@ class OfficerDashboardScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Quick Actions', style: AppTextStyles.titleLarge),
-        const SizedBox(height: 12),
+        SizedBox(height: 12),
         Row(
           children: [
             Expanded(
               child: _QuickActionTile(
                 icon: Symbols.analytics_rounded,
                 label: 'Analytics',
-                color: AppColors.statusReviewAmber,
+                color: context.appColors.statusReviewAmber,
                 onTap: () => context.push(AppRoutes.analytics),
               ),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Expanded(
               child: _QuickActionTile(
                 icon: Symbols.history_rounded,
                 label: 'History',
-                color: AppColors.statusCompliantGreen,
+                color: context.appColors.statusCompliantGreen,
                 onTap: () => context.go(AppRoutes.history),
               ),
             ),
-            const SizedBox(width: 12),
+          ],
+        ),
+        SizedBox(height: 12),
+        Row(
+          children: [
             Expanded(
               child: _QuickActionTile(
                 icon: Symbols.description_rounded,
                 label: 'Reports',
-                color: AppColors.accentBlue,
+                color: context.appColors.accentBlue,
                 onTap: () => context.go(AppRoutes.reports),
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: _QuickActionTile(
+                icon: Symbols.report_rounded,
+                label: 'Grievances',
+                color: context.appColors.statusViolationRed,
+                onTap: () => context.push(AppRoutes.officerGrievances),
               ),
             ),
           ],
@@ -239,10 +251,10 @@ class _QuickActionTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: context.appColors.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.cardBorder, width: 1),
-          boxShadow: AppColors.cardShadow,
+          border: Border.all(color: context.appColors.cardBorder, width: 1),
+          boxShadow: context.appColors.cardShadow,
         ),
         child: Column(
           children: [
@@ -260,10 +272,10 @@ class _QuickActionTile extends StatelessWidget {
               ),
               child: Icon(icon, color: color, size: 20, fill: 1),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8),
             Text(label,
                 style: AppTextStyles.overline
-                    .copyWith(color: AppColors.textSecondary)),
+                    .copyWith(color: context.appColors.textSecondary)),
           ],
         ),
       ),

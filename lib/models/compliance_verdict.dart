@@ -54,13 +54,11 @@ class ComplianceVerdict {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'scanId': scanId,
+      'scan_id': scanId,
       'status': status.name,
-      'complianceScore': complianceScore,
-      'checksPassed': checksPassed,
-      'checksTotal': checksTotal,
+      'compliance_score': complianceScore,
       'summary': summary,
-      'createdAt': createdAt.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
     };
   }
 }

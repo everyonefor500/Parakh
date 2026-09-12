@@ -33,13 +33,13 @@ class SectionHeader extends StatelessWidget {
                   Text(
                     actionText!,
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: AppColors.accentBlue,
+                      color: context.appColors.accentBlue,
                     ),
                   ),
-                  const SizedBox(width: 2),
-                  const Icon(
+                  SizedBox(width: 2),
+                  Icon(
                     Icons.chevron_right_rounded,
-                    color: AppColors.accentBlue,
+                    color: context.appColors.accentBlue,
                     size: 16,
                   ),
                 ],

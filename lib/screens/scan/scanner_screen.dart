@@ -105,7 +105,7 @@ class _ScannerScreenState extends State<ScannerScreen>
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text('Storage permission is required for gallery access.'),
+              content: Text('Storage permission is required for gallery access.'),
               action: SnackBarAction(
                 label: 'Settings',
                 onPressed: () => openAppSettings(),
@@ -144,7 +144,7 @@ class _ScannerScreenState extends State<ScannerScreen>
               color: Colors.black.withValues(alpha: 0.4),
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.close, color: Colors.white, size: 20),
+            child: Icon(Icons.close, color: Colors.white, size: 20),
           ),
           onPressed: () => context.pop(),
         ),
@@ -156,11 +156,11 @@ class _ScannerScreenState extends State<ScannerScreen>
                 color: Colors.black.withValues(alpha: 0.4),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.photo_library_outlined, color: Colors.white, size: 20),
+              child: Icon(Icons.photo_library_outlined, color: Colors.white, size: 20),
             ),
             onPressed: _pickGalleryImage,
           ),
-          const SizedBox(width: 8),
+          SizedBox(width: 8),
         ],
       ),
       body: _cameraPermissionDenied
@@ -175,34 +175,34 @@ class _ScannerScreenState extends State<ScannerScreen>
                       height: 80,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.statusViolationRed.withValues(alpha: 0.1),
+                        color: context.appColors.statusViolationRed.withValues(alpha: 0.1),
                         border: Border.all(
-                          color: AppColors.statusViolationRed.withValues(alpha: 0.3),
+                          color: context.appColors.statusViolationRed.withValues(alpha: 0.3),
                           width: 2,
                         ),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.no_photography_outlined,
-                        color: AppColors.statusViolationRed,
+                        color: context.appColors.statusViolationRed,
                         size: 36,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 24),
                     Text(
                       'Camera Access Denied',
                       style: AppTextStyles.headlineMedium,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12),
                     Text(
                       'Parakh needs camera access to scan product labels. Please enable it in your device settings.',
-                      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+                      style: AppTextStyles.bodyMedium.copyWith(color: context.appColors.textSecondary),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accentBlue,
+                        backgroundColor: context.appColors.accentBlue,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -210,7 +210,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                         ),
                       ),
                       onPressed: () => openAppSettings(),
-                      child: const Text('Open Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      child: Text('Open Settings', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
@@ -239,7 +239,7 @@ class _ScannerScreenState extends State<ScannerScreen>
 
                 // Camera mock label if not initialized
                 if (!_isCameraInitialized)
-                  const Center(
+                  Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -329,14 +329,14 @@ class _ScannerScreenState extends State<ScannerScreen>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      AppColors.accentBlue.withValues(alpha: 0),
-                                      AppColors.accentBlueGlow,
-                                      AppColors.accentBlue.withValues(alpha: 0),
+                                      context.appColors.accentBlue.withValues(alpha: 0),
+                                      context.appColors.accentBlueGlow,
+                                      context.appColors.accentBlue.withValues(alpha: 0),
                                     ],
                                   ),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.accentBlue
+                                      color: context.appColors.accentBlue
                                           .withValues(alpha: 0.6),
                                       blurRadius: 8,
                                     ),
@@ -371,7 +371,7 @@ class _ScannerScreenState extends State<ScannerScreen>
                                 .copyWith(color: Colors.white),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: 24),
                         // Capture button
                         GestureDetector(
                           key: const Key('capture_button'),
@@ -394,12 +394,12 @@ class _ScannerScreenState extends State<ScannerScreen>
                                     width: 3),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.accentBlue.withValues(alpha: 0.5),
+                                    color: context.appColors.accentBlue.withValues(alpha: 0.5),
                                     blurRadius: 32,
                                     spreadRadius: 8,
                                   ),
                                   BoxShadow(
-                                    color: AppColors.accentBlue.withValues(alpha: 0.2),
+                                    color: context.appColors.accentBlue.withValues(alpha: 0.2),
                                     blurRadius: 48,
                                     spreadRadius: 16,
                                   ),
@@ -411,9 +411,9 @@ class _ScannerScreenState extends State<ScannerScreen>
                                   height: 62,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    gradient: AppColors.scanButtonGradient,
+                                    gradient: context.appColors.scanButtonGradient,
                                   ),
-                                  child: const Icon(Icons.camera_alt,
+                                  child: Icon(Icons.camera_alt,
                                       color: Colors.white, size: 26),
                                 ),
                               ),
@@ -432,7 +432,7 @@ class _ScannerScreenState extends State<ScannerScreen>
   List<Widget> _buildCornerMarkers() {
     const markerLength = 24.0;
     const markerThickness = 3.0;
-    const markerColor = AppColors.accentBlueGlow;
+    final markerColor = context.appColors.accentBlueGlow;
     const radius = Radius.circular(4);
 
     return [

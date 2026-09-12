@@ -1,17 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../../router/app_router.dart';
+import '../../providers/scan_flow_provider.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/app_colors.dart';
 import '../../widgets/primary_button.dart';
+import '../../models/extracted_field.dart';
 
 class ExtractedInfoScreen extends StatelessWidget {
   const ExtractedInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final extractedFields = context.watch<ScanFlowProvider>().extractedFields;
+    
+    // Group fields
+    final pricingQuantityFields = ['MRP', 'Net Quantity'];
+    final dateFields = ['Mfg Date', 'Expiry'];
+    final manufacturerFields = ['Manufacturer', 'FSSAI', 'Consumer Care', 'Country of Origin'];
+    
+    List<ExtractedField> getFields(List<String> names) {
+      return names.map((name) {
+        return extractedFields.firstWhere(
+          (f) => f.fieldName == name,
+          orElse: () => ExtractedField(
+            id: '', scanId: '', fieldName: name, confidence: 0, isDetected: false, createdAt: DateTime.now()
+          )
+        );
+      }).toList();
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Extracted Info')),
+      appBar: AppBar(title: Text('Extracted Info')),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,26 +47,26 @@ class ExtractedInfoScreen extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AppColors.accentBlue.withValues(alpha: 0.08),
+                        color: context.appColors.accentBlue.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(14),
                         border: Border.all(
-                          color: AppColors.accentBlue.withValues(alpha: 0.2),
+                          color: context.appColors.accentBlue.withValues(alpha: 0.2),
                           width: 1,
                         ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.info_outline_rounded,
-                            color: AppColors.accentBlue,
+                            color: context.appColors.accentBlue,
                             size: 18,
                           ),
-                          const SizedBox(width: 10),
+                          SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               'Please verify the details extracted from the package before proceeding.',
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: AppColors.accentBlue
+                                color: context.appColors.accentBlue
                                     .withValues(alpha: 0.85),
                               ),
                             ),
@@ -53,37 +74,14 @@ class ExtractedInfoScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    SizedBox(height: 32),
 
-                    // Pricing & Quantity Card
-                    _buildCategoryCard('Pricing & Quantity', [
-                      ('Net Quantity', '200 g', 99),
-                      ('MRP', 'Rs. 60.00 (Incl. of all taxes)', 99),
-                      ('Unit Sale Price (USP)', 'Rs. 0.30 per g', 98),
-                    ]),
-                    const SizedBox(height: 16),
-
-                    // Mandatory Declarations Card
-                    _buildCategoryCard('Mandatory Declarations', [
-                      ('Product / Commodity', 'Aloo Bhujia Sev', 99),
-                      ('Brand', "Haldiram's", 98),
-                      ('Category', 'Packaged Snacks / Namkeen', 98),
-                      ('Batch No.', 'HAFH13', 97),
-                      ('Date of Packing / Mfg', '14.08.26 (21:10)', 99),
-                      ('Expiry / Use By Date', '10.02.27', 98),
-                      ('Country of Origin', 'Product of India', 99),
-                      ('Barcode (EAN-13)', '8904004400731', 99),
-                    ]),
-                    const SizedBox(height: 16),
-
-                    // Manufacturer & Consumer Care Card
-                    _buildCategoryCard('Manufacturer & Consumer Care', [
-                      ('Marketed By', 'Haldiram Snacks Food Pvt. Ltd., Gurugram - 122001', 98),
-                      ('Marketed By FSSAI Lic. No.', '10014011001919', 99),
-                      ('Manufactured By', 'Haldiram Snacks Food Pvt. Ltd. (Unit - Hariomkar), Nagpur - 441104', 98),
-                      ('Mfg FSSAI Lic. No.', '10015022004173', 99),
-                      ('Consumer Care', '0120-2400266 | customercare@haldiram.com', 97),
-                    ]),
+                    _buildCategoryCard(context, 'Pricing & Quantity', getFields(pricingQuantityFields)),
+                    SizedBox(height: 24),
+                    _buildCategoryCard(context, 'Dates', getFields(dateFields)),
+                    SizedBox(height: 24),
+                    _buildCategoryCard(context, 'Manufacturer Details', getFields(manufacturerFields)),
+                    SizedBox(height: 16),
                   ],
                 ),
               ),
@@ -104,13 +102,13 @@ class ExtractedInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryCard(String title, List<(String, String, int)> fields) {
+  Widget _buildCategoryCard(BuildContext context, String title, List<ExtractedField> fields) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        color: context.appColors.cardBackground,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -118,47 +116,77 @@ class ExtractedInfoScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.titleMedium.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+            style: AppTextStyles.titleMedium.copyWith(color: context.appColors.textPrimary, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: 20),
           ...fields.asMap().entries.map((entry) {
-            final (label, value, confidence) = entry.value;
+            final field = entry.value;
             final isLast = entry.key == fields.length - 1;
+            final bool isDetected = field.isDetected && field.fieldValue != null;
+            final int confidence = (field.confidence * 100).toInt();
+            final String displayValue = isDetected ? field.fieldValue! : 'Not detected';
+            
+            Color statusColor;
+            if (confidence >= 90) {
+              statusColor = context.appColors.statusCompliantGreen;
+            } else if (confidence >= 60) {
+              statusColor = context.appColors.statusReviewAmber;
+            } else {
+              statusColor = context.appColors.statusViolationRed;
+            }
+
             return Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 16.0),
+              padding: EdgeInsets.only(bottom: isLast ? 0 : 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    label,
-                    style: AppTextStyles.overline.copyWith(color: AppColors.textSecondary),
+                    field.fieldName,
+                    style: AppTextStyles.overline.copyWith(color: context.appColors.textSecondary),
                   ),
-                  const SizedBox(height: 4),
+                  SizedBox(height: 6),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         child: Text(
-                          value,
-                          style: AppTextStyles.bodyLarge,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: AppColors.statusCompliantGreen.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: AppColors.statusCompliantGreen.withValues(alpha: 0.3)),
-                        ),
-                        child: Text(
-                          '$confidence%',
-                          style: AppTextStyles.overline.copyWith(
-                            color: AppColors.statusCompliantGreen,
-                            fontWeight: FontWeight.bold,
+                          displayValue,
+                          style: AppTextStyles.bodyLarge.copyWith(
+                            color: isDetected ? context.appColors.textPrimary : context.appColors.textSecondary.withValues(alpha: 0.6),
+                            fontStyle: isDetected ? FontStyle.normal : FontStyle.italic,
                           ),
                         ),
                       ),
+                      SizedBox(width: 12),
+                      if (isDetected)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 8,
+                              height: 8,
+                              decoration: BoxDecoration(
+                                color: statusColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              '$confidence%',
+                              style: AppTextStyles.labelSmall.copyWith(
+                                color: context.appColors.textSecondary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        )
+                      else
+                         Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.warning_amber_rounded, size: 14, color: context.appColors.textSecondary.withValues(alpha: 0.5)),
+                          ],
+                        ),
                     ],
                   ),
                 ],

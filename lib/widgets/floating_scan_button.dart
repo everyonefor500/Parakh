@@ -57,8 +57,8 @@ class _FloatingScanButtonState extends State<FloatingScanButton>
           height: 64,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            gradient: AppColors.scanButtonGradient,
-            boxShadow: AppColors.floatingShadow,
+            gradient: context.appColors.scanButtonGradient,
+            boxShadow: context.appColors.floatingShadow,
           ),
           child: const Icon(
             Symbols.qr_code_scanner_rounded,

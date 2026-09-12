@@ -34,19 +34,59 @@ class AppStateProvider extends ChangeNotifier {
 
   Future<void> fetchHistory() async {
     if (_currentUser == null) return;
-    _scans = [];
-    _verdicts = [];
-    _violations = [];
-    notifyListeners();
-    // Intentionally left empty for the mock flow to start with 0 scans.
+    
+    try {
+      final supabase = Supabase.instance.client;
+      
+      // Fetch scans for the current user
+      final scansResponse = await supabase
+          .from('scans')
+          .select()
+          .eq('scanned_by', _currentUser!.id)
+          .order('created_at', ascending: false);
+          
+      _scans = (scansResponse as List).map((s) => Scan.fromJson(s)).toList();
+
+      if (_scans.isNotEmpty) {
+        final scanIds = _scans.map((s) => s.id).toList();
+        
+        // Fetch verdicts for these scans
+        final verdictsResponse = await supabase
+            .from('compliance_verdicts')
+            .select()
+            .inFilter('scan_id', scanIds);
+            
+        _verdicts = (verdictsResponse as List).map((v) => ComplianceVerdict.fromJson(v)).toList();
+        
+        if (_verdicts.isNotEmpty) {
+          final verdictIds = _verdicts.map((v) => v.id).toList();
+          
+          // Fetch violations for these verdicts
+          final violationsResponse = await supabase
+              .from('violations')
+              .select()
+              .inFilter('verdict_id', verdictIds);
+              
+          _violations = (violationsResponse as List).map((v) => Violation.fromJson(v)).toList();
+        } else {
+          _violations = [];
+        }
+      } else {
+        _verdicts = [];
+        _violations = [];
+      }
+      
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error fetching history: $e');
+      _scans = [];
+      _verdicts = [];
+      _violations = [];
+      notifyListeners();
+    }
   }
 
-  void addMockScan(Scan scan, ComplianceVerdict verdict, List<Violation> violations) {
-    _scans.insert(0, scan);
-    _verdicts.insert(0, verdict);
-    _violations.addAll(violations);
-    notifyListeners();
-  }
+
 
   Future<void> deleteScan(String scanId) async {
     try {

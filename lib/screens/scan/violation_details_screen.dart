@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../providers/scan_flow_provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import '../../router/app_router.dart';
-import '../../models/violation.dart';
 import '../../widgets/violation_card.dart';
 import '../../widgets/primary_button.dart';
 import '../../theme/app_colors.dart';
@@ -16,40 +15,13 @@ class ViolationDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ScanFlowProvider>();
-    final violations = provider.violations.isNotEmpty
-        ? provider.violations
-        : [
-            Violation(
-              id: 'v1',
-              verdictId: provider.mockVerdict?.id ?? 'verdict-1',
-              ruleId: 'Rule 6(1)(e)',
-              fieldName: 'Expiry Date',
-              issueTitle: 'Missing Expiry Date',
-              description:
-                  'The product does not have a clearly printed expiry date.',
-              requiredValue: 'Use by Date / Best Before',
-              severity: SeverityLevel.high,
-              createdAt: DateTime.now(),
-            ),
-            Violation(
-              id: 'v2',
-              verdictId: provider.mockVerdict?.id ?? 'verdict-1',
-              ruleId: 'Rule 6(1)(c)',
-              fieldName: 'MRP',
-              issueTitle: 'Improper MRP Format',
-              description:
-                  'The MRP is not printed in the required format with taxes included.',
-              requiredValue: 'MRP Rs. XX.XX (incl. of all taxes)',
-              detectedValue: '120',
-              severity: SeverityLevel.medium,
-              createdAt: DateTime.now(),
-            ),
-          ];
+    final violations = provider.violations;
 
-    final verdictId = provider.mockVerdict?.id ?? 'verdict-1';
+    final verdictId = provider.mockVerdict?.id;
+    debugPrint('[NAV_LOG] ViolationDetailsScreen built. verdictId from provider: $verdictId');
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Violations Found')),
+      appBar: AppBar(title: Text('Violations Found')),
       body: SafeArea(
         child: Column(
           children: [
@@ -58,28 +30,28 @@ class ViolationDetailsScreen extends StatelessWidget {
               margin: const EdgeInsets.fromLTRB(24, 8, 24, 0),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.statusViolationRed.withValues(alpha: 0.08),
+                color: context.appColors.statusViolationRed.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
                   color:
-                      AppColors.statusViolationRed.withValues(alpha: 0.2),
+                      context.appColors.statusViolationRed.withValues(alpha: 0.2),
                   width: 1,
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Symbols.warning_rounded,
-                    color: AppColors.statusViolationRed,
+                    color: context.appColors.statusViolationRed,
                     size: 20,
                     fill: 1,
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       '${violations.length} violation${violations.length != 1 ? 's' : ''} found that require immediate attention.',
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: AppColors.statusViolationRed
+                        color: context.appColors.statusViolationRed
                             .withValues(alpha: 0.85),
                       ),
                     ),
@@ -87,7 +59,7 @@ class ViolationDetailsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
 
             // Violations list
             Expanded(
@@ -104,14 +76,18 @@ class ViolationDetailsScreen extends StatelessWidget {
             // CTA
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-              child: PrimaryButton(
-                text: 'Generate Notice / Report',
-                icon: Symbols.description_rounded,
-                onPressed: () {
-                  context.push(AppRoutes.reportGeneration
-                      .replaceAll(':verdictId', verdictId), extra: violations);
-                },
-              ),
+              child: verdictId == null
+                  ? Center(child: CircularProgressIndicator())
+                  : PrimaryButton(
+                      text: 'Generate Notice / Report',
+                      icon: Symbols.description_rounded,
+                      onPressed: () {
+                        final route = AppRoutes.reportGeneration.replaceAll(':verdictId', verdictId);
+                        debugPrint('[NAV_LOG] Tapping Generate Notice / Report in ViolationDetailsScreen. Verdict ID: $verdictId');
+                        debugPrint('[NAV_LOG] Pushing route: $route');
+                        context.push(route, extra: violations);
+                      },
+                    ),
             ),
           ],
         ),

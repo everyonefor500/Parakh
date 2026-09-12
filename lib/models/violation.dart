@@ -71,18 +71,18 @@ class Violation {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'verdictId': verdictId,
-      'ruleId': ruleId,
-      'fieldName': fieldName,
-      'issueTitle': issueTitle,
+      'verdict_id': verdictId,
+      'rule_id': ruleId,
+      'field_name': fieldName,
+      'issue_title': issueTitle,
       'description': description,
-      'detectedValue': detectedValue,
-      'requiredValue': requiredValue,
+      'detected_value': detectedValue,
+      'required_value': requiredValue,
       'severity': severity.name,
-      'evidenceImageUrl': evidenceImageUrl,
-      'officerNote': officerNote,
-      'isIncludedInReport': isIncludedInReport,
-      'createdAt': createdAt.toIso8601String(),
+      'evidence_image_url': evidenceImageUrl,
+      'officer_note': officerNote,
+      'is_included_in_report': isIncludedInReport,
+      'created_at': createdAt.toIso8601String(),
     };
   }
 }

@@ -72,10 +72,10 @@ class _SecondaryButtonState extends State<SecondaryButton>
         child: Container(
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.bgSecondary,
+            color: context.appColors.bgSecondary,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: AppColors.cardBorder,
+              color: context.appColors.cardBorder,
               width: 1.5,
             ),
           ),
@@ -84,13 +84,13 @@ class _SecondaryButtonState extends State<SecondaryButton>
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.icon != null) ...[
-                  Icon(widget.icon, color: AppColors.textSecondary, size: 20),
+                  Icon(widget.icon, color: context.appColors.textSecondary, size: 20),
                   const SizedBox(width: 8),
                 ],
                 Text(
                   widget.text,
                   style: AppTextStyles.buttonText.copyWith(
-                    color: AppColors.textSecondary,
+                    color: context.appColors.textSecondary,
                   ),
                 ),
               ],

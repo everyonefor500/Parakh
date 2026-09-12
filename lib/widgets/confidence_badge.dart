@@ -14,14 +14,14 @@ class ConfidenceBadge extends StatelessWidget {
     Color glowColor;
 
     if (confidence > 85) {
-      color = AppColors.statusCompliantGreen;
-      glowColor = AppColors.statusCompliantGlow;
+      color = context.appColors.statusCompliantGreen;
+      glowColor = context.appColors.statusCompliantGlow;
     } else if (confidence >= 60) {
-      color = AppColors.statusReviewAmber;
-      glowColor = AppColors.statusReviewGlow;
+      color = context.appColors.statusReviewAmber;
+      glowColor = context.appColors.statusReviewGlow;
     } else {
-      color = AppColors.statusViolationRed;
-      glowColor = AppColors.statusViolationGlow;
+      color = context.appColors.statusViolationRed;
+      glowColor = context.appColors.statusViolationGlow;
     }
 
     return Container(
@@ -33,7 +33,7 @@ class ConfidenceBadge extends StatelessWidget {
           color: color.withValues(alpha: 0.3),
           width: 1,
         ),
-        boxShadow: AppColors.statusGlow(glowColor),
+        boxShadow: context.appColors.statusGlow(glowColor),
       ),
       child: Text(
         '${confidence.toStringAsFixed(0)}%',

@@ -26,10 +26,10 @@ class InspectionCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: context.appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       child: Material(
         color: Colors.transparent,
@@ -37,8 +37,8 @@ class InspectionCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(20),
-          splashColor: AppColors.accentBlue.withValues(alpha: 0.08),
-          highlightColor: AppColors.accentBlue.withValues(alpha: 0.04),
+          splashColor: context.appColors.accentBlue.withValues(alpha: 0.08),
+          highlightColor: context.appColors.accentBlue.withValues(alpha: 0.04),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -48,9 +48,9 @@ class InspectionCard extends StatelessWidget {
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color: AppColors.bgSecondary,
+                    color: context.appColors.bgSecondary,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: AppColors.cardBorder, width: 1),
+                    border: Border.all(color: context.appColors.cardBorder, width: 1),
                     image: scan.imageUrl.isNotEmpty
                         ? DecorationImage(
                             image: NetworkImage(scan.imageUrl),
@@ -59,11 +59,11 @@ class InspectionCard extends StatelessWidget {
                         : null,
                   ),
                   child: scan.imageUrl.isEmpty
-                      ? const Icon(Icons.inventory_2_outlined,
-                          color: AppColors.textTertiary, size: 24)
+                      ? Icon(Icons.inventory_2_outlined,
+                          color: context.appColors.textTertiary, size: 24)
                       : null,
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 // Content
                 Expanded(
                   child: Column(
@@ -75,7 +75,7 @@ class InspectionCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 4),
+                      SizedBox(height: 4),
                       Text(
                         DateFormat('MMM d, y • h:mm a').format(scan.createdAt),
                         style: AppTextStyles.labelSmall,
@@ -83,7 +83,7 @@ class InspectionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 // Status badge or pending icon
                 if (verdict != null)
                   StatusBadge(status: verdict!.status)
@@ -91,13 +91,13 @@ class InspectionCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: AppColors.bgTertiary,
+                      color: context.appColors.bgTertiary,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
                       'PENDING',
                       style: AppTextStyles.overline.copyWith(
-                        color: AppColors.textTertiary,
+                        color: context.appColors.textTertiary,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

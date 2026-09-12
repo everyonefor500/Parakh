@@ -186,7 +186,7 @@ class _AuthScreenState extends State<AuthScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Account created successfully!', style: AppTextStyles.bodyMedium),
-                backgroundColor: AppColors.statusCompliantGreen,
+                backgroundColor: context.appColors.statusCompliantGreen,
                 behavior: SnackBarBehavior.floating,
               ),
             );
@@ -214,7 +214,7 @@ class _AuthScreenState extends State<AuthScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message, style: AppTextStyles.bodyMedium),
-        backgroundColor: AppColors.statusViolationRed,
+        backgroundColor: context.appColors.statusViolationRed,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -228,9 +228,9 @@ class _AuthScreenState extends State<AuthScreen>
       body: Stack(
         children: [
           Container(
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF0D1526), AppColors.bgPrimary],
+                colors: [Color(0xFF0D1526), context.appColors.bgPrimary],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -245,7 +245,7 @@ class _AuthScreenState extends State<AuthScreen>
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.accentBlue.withValues(alpha: 0.12),
+                    context.appColors.accentBlue.withValues(alpha: 0.12),
                     Colors.transparent,
                   ],
                   radius: 0.8,
@@ -266,7 +266,7 @@ class _AuthScreenState extends State<AuthScreen>
                     Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
-                        icon: const Icon(Symbols.arrow_back_rounded, color: AppColors.textSecondary),
+                        icon: Icon(Symbols.arrow_back_rounded, color: context.appColors.textSecondary),
                         onPressed: () => context.pop(),
                       ),
                     ),
@@ -287,26 +287,26 @@ class _AuthScreenState extends State<AuthScreen>
                                 shape: BoxShape.circle,
                                 gradient: RadialGradient(
                                   colors: [
-                                    AppColors.accentBlue.withValues(alpha: 0.2),
-                                    AppColors.accentBlue.withValues(alpha: 0.05),
+                                    context.appColors.accentBlue.withValues(alpha: 0.2),
+                                    context.appColors.accentBlue.withValues(alpha: 0.05),
                                   ],
                                 ),
                                 border: Border.all(
-                                  color: AppColors.accentBlue.withValues(alpha: 0.4),
+                                  color: context.appColors.accentBlue.withValues(alpha: 0.4),
                                   width: 1.5,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: AppColors.accentBlue.withValues(alpha: 0.25),
+                                    color: context.appColors.accentBlue.withValues(alpha: 0.25),
                                     blurRadius: 32,
                                     spreadRadius: 4,
                                   ),
                                 ],
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Symbols.shield_rounded,
                                 size: 44,
-                                color: AppColors.accentBlue,
+                                color: context.appColors.accentBlue,
                                 fill: 1,
                               ),
                             ),
@@ -315,7 +315,7 @@ class _AuthScreenState extends State<AuthScreen>
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    SizedBox(height: 32),
 
                     AnimatedBuilder(
                       animation: _entryController,
@@ -328,7 +328,7 @@ class _AuthScreenState extends State<AuthScreen>
                               style: AppTextStyles.displayLarge,
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Text(
                               'Join Parakh AI Platform',
                               style: AppTextStyles.bodyMedium,
@@ -356,37 +356,37 @@ class _AuthScreenState extends State<AuthScreen>
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             decoration: BoxDecoration(
-                              color: AppColors.accentBlue.withValues(alpha: 0.1),
+                              color: context.appColors.accentBlue.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.3)),
+                              border: Border.all(color: context.appColors.accentBlue.withValues(alpha: 0.3)),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Symbols.verified_user_rounded, color: AppColors.accentBlue, size: 24),
-                                const SizedBox(width: 12),
+                                Icon(Symbols.verified_user_rounded, color: context.appColors.accentBlue, size: 24),
+                                SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Selected Role',
-                                        style: AppTextStyles.labelSmall.copyWith(color: AppColors.textTertiary),
+                                        style: AppTextStyles.labelSmall.copyWith(color: context.appColors.textTertiary),
                                       ),
                                       Text(
                                         selectedRole.label,
-                                        style: AppTextStyles.titleMedium.copyWith(color: AppColors.accentBlue),
+                                        style: AppTextStyles.titleMedium.copyWith(color: context.appColors.accentBlue),
                                       ),
                                     ],
                                   ),
                                 ),
                                 TextButton(
                                   onPressed: () => context.pop(),
-                                  child: Text('Change', style: AppTextStyles.labelMedium.copyWith(color: AppColors.textSecondary)),
+                                  child: Text('Change', style: AppTextStyles.labelMedium.copyWith(color: context.appColors.textSecondary)),
                                 ),
                               ],
                             ),
                           ),
-                          const SizedBox(height: 24),
+                          SizedBox(height: 24),
 
                           if (!_isLogin) ...[
                             _buildTextField(
@@ -394,14 +394,14 @@ class _AuthScreenState extends State<AuthScreen>
                               label: 'Full Name',
                               icon: Symbols.person_rounded,
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: 16),
                           ],
                           _buildTextField(
                             controller: _emailController,
                             label: 'Email',
                             icon: Symbols.mail_rounded,
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           _buildTextField(
                             controller: _passwordController,
                             label: 'Password',
@@ -410,29 +410,29 @@ class _AuthScreenState extends State<AuthScreen>
                           ),
                           
                           if (_isLogin) ...[
-                            const SizedBox(height: 8),
+                            SizedBox(height: 8),
                             Align(
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {},
                                 child: Text(
                                   'Forgot Password?',
-                                  style: AppTextStyles.labelMedium.copyWith(color: AppColors.accentBlue),
+                                  style: AppTextStyles.labelMedium.copyWith(color: context.appColors.accentBlue),
                                 ),
                               ),
                             ),
                           ] else ...[
-                            const SizedBox(height: 24),
+                            SizedBox(height: 24),
                           ],
 
                           _isLoading
-                              ? const Center(child: CircularProgressIndicator())
+                              ? Center(child: CircularProgressIndicator())
                               : PrimaryButton(
                                   text: _isLogin ? 'Log In' : 'Sign Up',
                                   onPressed: _handleSubmit,
                                 ),
                           
-                          const SizedBox(height: 16),
+                          SizedBox(height: 16),
                           
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -450,7 +450,7 @@ class _AuthScreenState extends State<AuthScreen>
                                 child: Text(
                                   _isLogin ? 'Sign Up' : 'Log In',
                                   style: AppTextStyles.labelLarge.copyWith(
-                                    color: AppColors.accentBlue,
+                                    color: context.appColors.accentBlue,
                                   ),
                                 ),
                               ),
@@ -480,23 +480,23 @@ class _AuthScreenState extends State<AuthScreen>
     return TextField(
       controller: controller,
       obscureText: obscureText,
-      style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textPrimary),
+      style: AppTextStyles.bodyMedium.copyWith(color: context.appColors.textPrimary),
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: AppColors.textSecondary, size: 20, fill: 1),
+        prefixIcon: Icon(icon, color: context.appColors.textSecondary, size: 20, fill: 1),
         filled: true,
-        fillColor: AppColors.bgSecondary,
+        fillColor: context.appColors.bgSecondary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.cardBorder),
+          borderSide: BorderSide(color: context.appColors.cardBorder),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.cardBorder),
+          borderSide: BorderSide(color: context.appColors.cardBorder),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.accentBlue, width: 1.5),
+          borderSide: BorderSide(color: context.appColors.accentBlue, width: 1.5),
         ),
       ),
     );

@@ -33,7 +33,7 @@ class FieldRow extends StatelessWidget {
                 child: Text(
                   label,
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.textTertiary,
+                    color: context.appColors.textTertiary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -52,13 +52,13 @@ class FieldRow extends StatelessWidget {
                           Icon(
                             Icons.remove_circle_outline,
                             size: 14,
-                            color: AppColors.textTertiary,
+                            color: context.appColors.textTertiary,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Not detected',
                             style: AppTextStyles.bodyMedium.copyWith(
-                              color: AppColors.textTertiary,
+                              color: context.appColors.textTertiary,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -76,7 +76,7 @@ class FieldRow extends StatelessWidget {
           Divider(
             height: 1,
             thickness: 1,
-            color: AppColors.dividerSubtle,
+            color: context.appColors.dividerSubtle,
           ),
       ],
     );

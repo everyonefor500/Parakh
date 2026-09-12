@@ -35,7 +35,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Analytics'),
+        title: Text('Analytics'),
         leading: const BackButton(),
       ),
       body: SingleChildScrollView(
@@ -44,14 +44,14 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Top Stats Row ─────────────────────────────────────
-            const Row(
+            Row(
               children: [
                 Expanded(
                   child: StatCard(
                     title: 'This Month',
                     value: '296',
                     icon: Symbols.qr_code_scanner_rounded,
-                    iconColor: AppColors.accentBlue,
+                    iconColor: context.appColors.accentBlue,
                     trend: '↑ 14%',
                   ),
                 ),
@@ -61,7 +61,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                     title: 'Compliant',
                     value: '82%',
                     icon: Symbols.check_circle_rounded,
-                    iconColor: AppColors.statusCompliantGreen,
+                    iconColor: context.appColors.statusCompliantGreen,
                     trend: '↑ 4%',
                   ),
                 ),
@@ -71,34 +71,34 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                     title: 'Notices',
                     value: '12',
                     icon: Symbols.assignment_late_rounded,
-                    iconColor: AppColors.statusViolationRed,
+                    iconColor: context.appColors.statusViolationRed,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // ── Weekly Scans Bar Chart ────────────────────────────
             Text('Scans This Week', style: AppTextStyles.titleLarge),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text('Daily scan volume', style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _buildBarChart(),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // ── Compliance Rate Line Chart ────────────────────────
             Text('Compliance Rate', style: AppTextStyles.titleLarge),
-            const SizedBox(height: 4),
+            SizedBox(height: 4),
             Text('6-month trend', style: AppTextStyles.bodyMedium),
-            const SizedBox(height: 20),
+            SizedBox(height: 20),
             _buildLineChart(),
-            const SizedBox(height: 32),
+            SizedBox(height: 32),
 
             // ── Violation Breakdown ───────────────────────────────
             Text('Top Violations', style: AppTextStyles.titleLarge),
-            const SizedBox(height: 16),
+            SizedBox(height: 16),
             _buildViolationBreakdown(),
-            const SizedBox(height: 40),
+            SizedBox(height: 40),
           ],
         ),
       ),
@@ -110,10 +110,10 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
       height: 200,
       padding: const EdgeInsets.fromLTRB(0, 16, 16, 0),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: context.appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       child: BarChart(
         BarChartData(
@@ -129,13 +129,13 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
               });
             },
             touchTooltipData: BarTouchTooltipData(
-              getTooltipColor: (_) => AppColors.cardBackgroundElevated,
+              getTooltipColor: (_) => context.appColors.cardBackgroundElevated,
               tooltipRoundedRadius: 8,
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${rod.toY.toInt()} scans',
                   AppTextStyles.labelSmall.copyWith(
-                    color: AppColors.accentBlue,
+                    color: context.appColors.accentBlue,
                     fontWeight: FontWeight.w700,
                   ),
                 );
@@ -159,12 +159,12 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                   gradient: LinearGradient(
                     colors: isTouched || isHighest
                         ? [
-                            AppColors.accentBlueGlow,
-                            AppColors.accentBlue,
+                            context.appColors.accentBlueGlow,
+                            context.appColors.accentBlue,
                           ]
                         : [
-                            AppColors.bgTertiary,
-                            AppColors.bgSecondary,
+                            context.appColors.bgTertiary,
+                            context.appColors.bgSecondary,
                           ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -172,7 +172,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 80,
-                    color: AppColors.bgSecondary,
+                    color: context.appColors.bgSecondary,
                   ),
                 ),
               ],
@@ -211,7 +211,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
             drawVerticalLine: false,
             horizontalInterval: 20,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: AppColors.dividerSubtle,
+              color: context.appColors.dividerSubtle,
               strokeWidth: 1,
               dashArray: [4, 6],
             ),
@@ -228,10 +228,10 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
       height: 180,
       padding: const EdgeInsets.fromLTRB(0, 16, 16, 8),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: context.appColors.cardBackground,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.cardBorder, width: 1),
-        boxShadow: AppColors.cardShadow,
+        border: Border.all(color: context.appColors.cardBorder, width: 1),
+        boxShadow: context.appColors.cardShadow,
       ),
       child: LineChart(
         LineChartData(
@@ -241,14 +241,14 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
           maxY: 90,
           lineTouchData: LineTouchData(
             touchTooltipData: LineTouchTooltipData(
-              getTooltipColor: (_) => AppColors.cardBackgroundElevated,
+              getTooltipColor: (_) => context.appColors.cardBackgroundElevated,
               tooltipRoundedRadius: 8,
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
                   return LineTooltipItem(
                     '${spot.y.toInt()}%',
                     AppTextStyles.labelSmall.copyWith(
-                      color: AppColors.statusCompliantGreen,
+                      color: context.appColors.statusCompliantGreen,
                       fontWeight: FontWeight.w700,
                     ),
                   );
@@ -261,7 +261,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
               spots: _complianceSpots,
               isCurved: true,
               curveSmoothness: 0.35,
-              color: AppColors.statusCompliantGreen,
+              color: context.appColors.statusCompliantGreen,
               barWidth: 2.5,
               isStrokeCapRound: true,
               dotData: FlDotData(
@@ -269,8 +269,8 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                 getDotPainter: (spot, percent, bar, index) =>
                     FlDotCirclePainter(
                   radius: 4,
-                  color: AppColors.statusCompliantGreen,
-                  strokeColor: AppColors.cardBackground,
+                  color: context.appColors.statusCompliantGreen,
+                  strokeColor: context.appColors.cardBackground,
                   strokeWidth: 2,
                 ),
               ),
@@ -278,8 +278,8 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                 show: true,
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.statusCompliantGreen.withValues(alpha: 0.2),
-                    AppColors.statusCompliantGreen.withValues(alpha: 0.0),
+                    context.appColors.statusCompliantGreen.withValues(alpha: 0.2),
+                    context.appColors.statusCompliantGreen.withValues(alpha: 0.0),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -318,7 +318,7 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
             drawVerticalLine: false,
             horizontalInterval: 10,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: AppColors.dividerSubtle,
+              color: context.appColors.dividerSubtle,
               strokeWidth: 1,
               dashArray: [4, 6],
             ),
@@ -332,10 +332,10 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
 
   Widget _buildViolationBreakdown() {
     final items = [
-      ('Missing Expiry Date', 0.42, AppColors.statusViolationRed),
-      ('Improper MRP Format', 0.28, AppColors.statusReviewAmber),
-      ('No Mfg Date', 0.18, AppColors.accentBlue),
-      ('Missing Net Qty', 0.12, AppColors.textTertiary),
+      ('Missing Expiry Date', 0.42, context.appColors.statusViolationRed),
+      ('Improper MRP Format', 0.28, context.appColors.statusReviewAmber),
+      ('No Mfg Date', 0.18, context.appColors.accentBlue),
+      ('Missing Net Qty', 0.12, context.appColors.textTertiary),
     ];
 
     return Column(
@@ -355,13 +355,13 @@ class _OfficerAnalyticsScreenState extends State<OfficerAnalyticsScreen> {
                           .copyWith(color: color)),
                 ],
               ),
-              const SizedBox(height: 6),
+              SizedBox(height: 6),
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
                   value: ratio,
                   minHeight: 6,
-                  backgroundColor: AppColors.bgTertiary,
+                  backgroundColor: context.appColors.bgTertiary,
                   valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
               ),
